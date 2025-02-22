@@ -18,22 +18,22 @@ import {Button, Table} from "antd";
 import BaseListPage from "./BaseListPage";
 import moment from "moment";
 import * as Setting from "./Setting";
-import * as DoctorBackend from "./backend/DoctorBackend";
+import * as CaaseBackend from "./backend/CaaseBackend";
 import i18next from "i18next";
 import PopconfirmModal from "./common/modal/PopconfirmModal";
 
-class DoctorListPage extends BaseListPage {
+class CaaseListPage extends BaseListPage {
   constructor(props) {
     super(props);
   }
 
-  newDoctor() {
+  newCaase() {
     return {
       owner: this.props.account.owner,
-      name: `doctor_${Setting.getRandomName()}`,
+      name: `caase_${Setting.getRandomName()}`,
       createdTime: moment().format(),
       updatedTime: moment().format(),
-      displayName: `New Doctor - ${Setting.getRandomName()}`,
+      displayName: `New Caase - ${Setting.getRandomName()}`,
       category: "Public Cloud",
       type: "Amazon Web Services",
       clientId: "",
@@ -43,27 +43,27 @@ class DoctorListPage extends BaseListPage {
     };
   }
 
-  addDoctor() {
-    const newDoctor = this.newDoctor();
-    DoctorBackend.addDoctor(newDoctor)
+  addCaase() {
+    const newCaase = this.newCaase();
+    CaaseBackend.addCaase(newCaase)
       .then((res) => {
         if (res.status === "ok") {
-          this.props.history.push({pathname: `/doctors/${newDoctor.owner}/${newDoctor.name}`, mode: "add"});
-          Setting.showMessage("success", "Doctor added successfully");
+          this.props.history.push({pathname: `/caases/${newCaase.owner}/${newCaase.name}`, mode: "add"});
+          Setting.showMessage("success", "Caase added successfully");
         } else {
-          Setting.showMessage("error", `Failed to add Doctor: ${res.msg}`);
+          Setting.showMessage("error", `Failed to add Caase: ${res.msg}`);
         }
       })
       .catch(error => {
-        Setting.showMessage("error", `Doctor failed to add: ${error}`);
+        Setting.showMessage("error", `Caase failed to add: ${error}`);
       });
   }
 
-  deleteDoctor(i) {
-    DoctorBackend.deleteDoctor(this.state.data[i])
+  deleteCaase(i) {
+    CaaseBackend.deleteCaase(this.state.data[i])
       .then((res) => {
         if (res.status === "ok") {
-          Setting.showMessage("success", "Doctor deleted successfully");
+          Setting.showMessage("success", "Caase deleted successfully");
           this.setState({
             data: Setting.deleteRow(this.state.data, i),
             pagination: {
@@ -72,15 +72,15 @@ class DoctorListPage extends BaseListPage {
             },
           });
         } else {
-          Setting.showMessage("error", `Failed to delete Doctor: ${res.msg}`);
+          Setting.showMessage("error", `Failed to delete Caase: ${res.msg}`);
         }
       })
       .catch(error => {
-        Setting.showMessage("error", `Doctor failed to delete: ${error}`);
+        Setting.showMessage("error", `Caase failed to delete: ${error}`);
       });
   }
 
-  renderTable(doctors) {
+  renderTable(caases) {
     const columns = [
       {
         title: i18next.t("general:Organization"),
@@ -89,7 +89,7 @@ class DoctorListPage extends BaseListPage {
         width: "110px",
         sorter: true,
         ...this.getColumnSearchProps("owner"),
-        render: (text, doctor, index) => {
+        render: (text, caase, index) => {
           return (
             <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/organizations/${text}`)}>
               {text}
@@ -106,7 +106,7 @@ class DoctorListPage extends BaseListPage {
         ...this.getColumnSearchProps("name"),
         render: (text, record, index) => {
           return (
-            <Link to={`/doctors/${record.owner}/${record.name}`}>{text}</Link>
+            <Link to={`/caases/${record.owner}/${record.name}`}>{text}</Link>
           );
         },
       },
@@ -117,7 +117,7 @@ class DoctorListPage extends BaseListPage {
         width: "160px",
         // sorter: true,
         sorter: (a, b) => a.createdTime.localeCompare(b.createdTime),
-        render: (text, doctor, index) => {
+        render: (text, caase, index) => {
           return Setting.getFormattedDate(text);
         },
       },
@@ -157,12 +157,12 @@ class DoctorListPage extends BaseListPage {
         sorter: (a, b) => a.region.localeCompare(b.region),
       },
       {
-        title: i18next.t("doctor:Doctor URL"),
-        dataIndex: "doctorUrl",
-        key: "doctorUrl",
+        title: i18next.t("caase:Caase URL"),
+        dataIndex: "caaseUrl",
+        key: "caaseUrl",
         width: "150px",
         sorter: true,
-        ...this.getColumnSearchProps("doctorUrl"),
+        ...this.getColumnSearchProps("caaseUrl"),
         render: (text, record, index) => {
           return (
             <a target="_blank" rel="noreferrer" href={text}>
@@ -186,19 +186,19 @@ class DoctorListPage extends BaseListPage {
         key: "action",
         width: "130px",
         fixed: (Setting.isMobile()) ? "false" : "right",
-        render: (text, doctor, index) => {
+        render: (text, caase, index) => {
           return (
             <div>
               <Button
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
-                onClick={() => this.props.history.push(`/doctors/${doctor.owner}/${doctor.name}`)}
+                onClick={() => this.props.history.push(`/caases/${caase.owner}/${caase.name}`)}
               >{i18next.t("general:Edit")}
               </Button>
               <PopconfirmModal
-                disabled={doctor.owner !== this.props.account.owner}
+                disabled={caase.owner !== this.props.account.owner}
                 style={{marginBottom: "10px"}}
-                title={i18next.t("general:Sure to delete") + `: ${doctor.name} ?`}
-                onConfirm={() => this.deleteDoctor(index)}
+                title={i18next.t("general:Sure to delete") + `: ${caase.name} ?`}
+                onConfirm={() => this.deleteCaase(index)}
               >
               </PopconfirmModal>
             </div>
@@ -217,11 +217,11 @@ class DoctorListPage extends BaseListPage {
 
     return (
       <div>
-        <Table scroll={{x: "max-content"}} columns={columns} dataSource={doctors} rowKey={(doctor) => `${doctor.owner}/${doctor.name}`} size="middle" bordered pagination={paginationProps}
+        <Table scroll={{x: "max-content"}} columns={columns} dataSource={caases} rowKey={(caase) => `${caase.owner}/${caase.name}`} size="middle" bordered pagination={paginationProps}
           title={() => (
             <div>
-              {i18next.t("general:Doctors")}&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" size="small" onClick={this.addDoctor.bind(this)}>{i18next.t("general:Add")}</Button>
+              {i18next.t("general:Caases")}&nbsp;&nbsp;&nbsp;&nbsp;
+              <Button type="primary" size="small" onClick={this.addCaase.bind(this)}>{i18next.t("general:Add")}</Button>
             </div>
           )}
           loading={this.state.loading}
@@ -239,7 +239,7 @@ class DoctorListPage extends BaseListPage {
       value = params.type;
     }
     this.setState({loading: true});
-    DoctorBackend.getDoctors(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
+    CaaseBackend.getCaases(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
       .then((res) => {
         this.setState({
           loading: false,
@@ -267,4 +267,4 @@ class DoctorListPage extends BaseListPage {
   };
 }
 
-export default DoctorListPage;
+export default CaaseListPage;

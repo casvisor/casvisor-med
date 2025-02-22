@@ -15,64 +15,64 @@
 import React from "react";
 import {Button, Card, Col, Input, Row, Select} from "antd";
 import {LinkOutlined} from "@ant-design/icons";
-import * as DoctorBackend from "./backend/DoctorBackend";
+import * as HospitalBackend from "./backend/HospitalBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
 
-class DoctorEditPage extends React.Component {
+class HospitalEditPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       classes: props,
-      doctorOwner: props.match.params.organizationName,
-      doctorName: props.match.params.doctorName,
-      doctor: null,
+      hospitalOwner: props.match.params.organizationName,
+      hospitalName: props.match.params.hospitalName,
+      hospital: null,
       mode: props.location.mode !== undefined ? props.location.mode : "edit",
     };
   }
 
   UNSAFE_componentWillMount() {
-    this.getDoctor();
+    this.getHospital();
   }
 
-  getDoctor() {
-    DoctorBackend.getDoctor(this.props.account.owner, this.state.doctorName)
+  getHospital() {
+    HospitalBackend.getHospital(this.props.account.owner, this.state.hospitalName)
       .then((res) => {
         if (res.status === "ok") {
           this.setState({
-            doctor: res.data,
+            hospital: res.data,
           });
         } else {
-          Setting.showMessage("error", `Failed to get doctor: ${res.msg}`);
+          Setting.showMessage("error", `Failed to get hospital: ${res.msg}`);
         }
       });
   }
 
-  parseDoctorField(key, value) {
+  parseHospitalField(key, value) {
     if ([].includes(key)) {
       value = Setting.myParseInt(value);
     }
     return value;
   }
 
-  updateDoctorField(key, value) {
-    value = this.parseDoctorField(key, value);
+  updateHospitalField(key, value) {
+    value = this.parseHospitalField(key, value);
 
-    const doctor = this.state.doctor;
-    doctor[key] = value;
+    const hospital = this.state.hospital;
+    hospital[key] = value;
     this.setState({
-      doctor: doctor,
+      hospital: hospital,
     });
   }
 
-  renderDoctor() {
+  renderHospital() {
     return (
       <Card size="small" title={
         <div>
-          {this.state.mode === "add" ? i18next.t("doctor:New Doctor") : i18next.t("doctor:Edit Doctor")}&nbsp;&nbsp;&nbsp;&nbsp;
-          <Button onClick={() => this.submitDoctorEdit(false)}>{i18next.t("general:Save")}</Button>
-          <Button style={{marginLeft: "20px"}} type="primary" onClick={() => this.submitDoctorEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
-          {this.state.mode === "add" ? <Button style={{marginLeft: "20px"}} onClick={() => this.deleteDoctor()}>{i18next.t("general:Cancel")}</Button> : null}
+          {this.state.mode === "add" ? i18next.t("hospital:New Hospital") : i18next.t("hospital:Edit Hospital")}&nbsp;&nbsp;&nbsp;&nbsp;
+          <Button onClick={() => this.submitHospitalEdit(false)}>{i18next.t("general:Save")}</Button>
+          <Button style={{marginLeft: "20px"}} type="primary" onClick={() => this.submitHospitalEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
+          {this.state.mode === "add" ? <Button style={{marginLeft: "20px"}} onClick={() => this.deleteHospital()}>{i18next.t("general:Cancel")}</Button> : null}
         </div>
       } style={{marginLeft: "5px"}} type="inner">
         <Row style={{marginTop: "10px"}} >
@@ -80,8 +80,8 @@ class DoctorEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Organization"), i18next.t("general:Organization - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.doctor.owner} onChange={e => {
-              this.updateDoctorField("owner", e.target.value);
+            <Input value={this.state.hospital.owner} onChange={e => {
+              this.updateHospitalField("owner", e.target.value);
             }} />
           </Col>
         </Row>
@@ -90,24 +90,24 @@ class DoctorEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Name"), i18next.t("general:Name - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.doctor.name} onChange={e => {
-              this.updateDoctorField("name", e.target.value);
+            <Input value={this.state.hospital.name} onChange={e => {
+              this.updateHospitalField("name", e.target.value);
             }} />
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("doctor:Category"), i18next.t("doctor:Category - Tooltip"))} :
+            {Setting.getLabel(i18next.t("hospital:Category"), i18next.t("hospital:Category - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Select virtual={false} style={{width: "100%"}} value={this.state.doctor.category} onChange={value => {
-              this.updateDoctorField("category", value);
+            <Select virtual={false} style={{width: "100%"}} value={this.state.hospital.category} onChange={value => {
+              this.updateHospitalField("category", value);
               if (value === "Public Cloud") {
-                this.updateDoctorField("type", "Amazon Web Services");
+                this.updateHospitalField("type", "Amazon Web Services");
               } else if (value === "Private Cloud") {
-                this.updateDoctorField("type", "KVM");
+                this.updateHospitalField("type", "KVM");
               } else if (value === "Blockchain") {
-                this.updateDoctorField("type", "Hyperledger Fabric");
+                this.updateHospitalField("type", "Hyperledger Fabric");
               }
             }}
             options={[
@@ -122,8 +122,8 @@ class DoctorEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Client ID"), i18next.t("general:Client ID - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.doctor.clientId} onChange={e => {
-              this.updateDoctorField("clientId", e.target.value);
+            <Input value={this.state.hospital.clientId} onChange={e => {
+              this.updateHospitalField("clientId", e.target.value);
             }} />
           </Col>
         </Row>
@@ -132,8 +132,8 @@ class DoctorEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Client secret"), i18next.t("general:Client secret - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.doctor.clientSecret} onChange={e => {
-              this.updateDoctorField("clientSecret", e.target.value);
+            <Input value={this.state.hospital.clientSecret} onChange={e => {
+              this.updateHospitalField("clientSecret", e.target.value);
             }} />
           </Col>
         </Row>
@@ -142,21 +142,21 @@ class DoctorEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Region"), i18next.t("general:Region - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.doctor.region} onChange={e => {
-              this.updateDoctorField("region", e.target.value);
+            <Input value={this.state.hospital.region} onChange={e => {
+              this.updateHospitalField("region", e.target.value);
             }} />
           </Col>
         </Row>
         {
-          this.state.doctor.category !== "Blockchain" ? null : (
+          this.state.hospital.category !== "Blockchain" ? null : (
             <React.Fragment>
               <Row style={{marginTop: "20px"}} >
                 <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
                   {Setting.getLabel(i18next.t("general:Network"), i18next.t("general:Network - Tooltip"))} :
                 </Col>
                 <Col span={22} >
-                  <Input value={this.state.doctor.network} onChange={e => {
-                    this.updateDoctorField("network", e.target.value);
+                  <Input value={this.state.hospital.network} onChange={e => {
+                    this.updateHospitalField("network", e.target.value);
                   }} />
                 </Col>
               </Row>
@@ -165,8 +165,8 @@ class DoctorEditPage extends React.Component {
                   {Setting.getLabel(i18next.t("general:Chain"), i18next.t("general:Chain - Tooltip"))} :
                 </Col>
                 <Col span={22} >
-                  <Input value={this.state.doctor.chain} onChange={e => {
-                    this.updateDoctorField("chain", e.target.value);
+                  <Input value={this.state.hospital.chain} onChange={e => {
+                    this.updateHospitalField("chain", e.target.value);
                   }} />
                 </Col>
               </Row>
@@ -175,31 +175,31 @@ class DoctorEditPage extends React.Component {
         }
         <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("doctor:Browser URL"), i18next.t("doctor:Browser URL - Tooltip"))} :
+            {Setting.getLabel(i18next.t("hospital:Browser URL"), i18next.t("hospital:Browser URL - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input prefix={<LinkOutlined />} value={this.state.doctor.browserUrl} onChange={e => {
-              this.updateDoctorField("browserUrl", e.target.value);
+            <Input prefix={<LinkOutlined />} value={this.state.hospital.browserUrl} onChange={e => {
+              this.updateHospitalField("browserUrl", e.target.value);
             }} />
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("doctor:Doctor URL"), i18next.t("doctor:Doctor URL - Tooltip"))} :
+            {Setting.getLabel(i18next.t("hospital:Hospital URL"), i18next.t("hospital:Hospital URL - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input prefix={<LinkOutlined />} value={this.state.doctor.doctorUrl} onChange={e => {
-              this.updateDoctorField("doctorUrl", e.target.value);
+            <Input prefix={<LinkOutlined />} value={this.state.hospital.hospitalUrl} onChange={e => {
+              this.updateHospitalField("hospitalUrl", e.target.value);
             }} />
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("doctor:State"), i18next.t("doctor:State - Tooltip"))} :
+            {Setting.getLabel(i18next.t("hospital:State"), i18next.t("hospital:State - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Select virtual={false} style={{width: "100%"}} value={this.state.doctor.state} onChange={value => {
-              this.updateDoctorField("state", value);
+            <Select virtual={false} style={{width: "100%"}} value={this.state.hospital.state} onChange={value => {
+              this.updateHospitalField("state", value);
             }}
             options={[
               {value: "Active", label: "Active"},
@@ -211,25 +211,25 @@ class DoctorEditPage extends React.Component {
     );
   }
 
-  submitDoctorEdit(willExist) {
-    const doctor = Setting.deepCopy(this.state.doctor);
-    DoctorBackend.updateDoctor(this.state.doctor.owner, this.state.doctorName, doctor)
+  submitHospitalEdit(willExist) {
+    const hospital = Setting.deepCopy(this.state.hospital);
+    HospitalBackend.updateHospital(this.state.hospital.owner, this.state.hospitalName, hospital)
       .then((res) => {
         if (res.status === "ok") {
           if (res.data) {
             Setting.showMessage("success", "Successfully saved");
             this.setState({
-              doctorName: this.state.doctor.name,
+              hospitalName: this.state.hospital.name,
             });
             if (willExist) {
-              this.props.history.push("/doctors");
+              this.props.history.push("/hospitals");
             } else {
-              this.props.history.push(`/doctors/${this.state.doctor.owner}/${encodeURIComponent(this.state.doctor.name)}`);
+              this.props.history.push(`/hospitals/${this.state.hospital.owner}/${encodeURIComponent(this.state.hospital.name)}`);
             }
-            // this.getDoctor(true);
+            // this.getHospital(true);
           } else {
             Setting.showMessage("error", "failed to save: server side failure");
-            this.updateDoctorField("name", this.state.doctorName);
+            this.updateHospitalField("name", this.state.hospitalName);
           }
         } else {
           Setting.showMessage("error", `failed to save: ${res.msg}`);
@@ -240,11 +240,11 @@ class DoctorEditPage extends React.Component {
       });
   }
 
-  deleteDoctor() {
-    DoctorBackend.deleteDoctor(this.state.doctor)
+  deleteHospital() {
+    HospitalBackend.deleteHospital(this.state.hospital)
       .then((res) => {
         if (res.status === "ok") {
-          this.props.history.push("/doctors");
+          this.props.history.push("/hospitals");
         } else {
           Setting.showMessage("error", `${i18next.t("general:Failed to delete")}: ${res.msg}`);
         }
@@ -258,16 +258,16 @@ class DoctorEditPage extends React.Component {
     return (
       <div>
         {
-          this.state.doctor !== null ? this.renderDoctor() : null
+          this.state.hospital !== null ? this.renderHospital() : null
         }
         <div style={{marginTop: "20px", marginLeft: "40px"}}>
-          <Button size="large" onClick={() => this.submitDoctorEdit(false)}>{i18next.t("general:Save")}</Button>
-          <Button style={{marginLeft: "20px"}} type="primary" size="large" onClick={() => this.submitDoctorEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
-          {this.state.mode === "add" ? <Button style={{marginLeft: "20px"}} size="large" onClick={() => this.deleteDoctor()}>{i18next.t("general:Cancel")}</Button> : null}
+          <Button size="large" onClick={() => this.submitHospitalEdit(false)}>{i18next.t("general:Save")}</Button>
+          <Button style={{marginLeft: "20px"}} type="primary" size="large" onClick={() => this.submitHospitalEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
+          {this.state.mode === "add" ? <Button style={{marginLeft: "20px"}} size="large" onClick={() => this.deleteHospital()}>{i18next.t("general:Cancel")}</Button> : null}
         </div>
       </div>
     );
   }
 }
 
-export default DoctorEditPage;
+export default HospitalEditPage;

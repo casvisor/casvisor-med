@@ -42,6 +42,18 @@ import DoctorListPage from "./DoctorListPage.js"
 import ShortcutsPage from "./basic/ShortcutsPage";
 import AssetWorkbench from "./AssetWorkbench";
 import AccessPage from "./component/access/AccessPage";
+import CaaseListPage from "./CaaseListPage";
+import CaaseEditPage from "./CaaseEditPage";
+import ConsultationListPage from "./ConsultationListPage";
+import ConsultationEditPage from "./ConsultationEditPage";
+import DoctorListPage from "./DoctorListPage";
+import DoctorEditPage from "./DoctorEditPage";
+import HospitalListPage from "./HospitalListPage";
+import HospitalEditPage from "./HospitalEditPage";
+import LearningListPage from "./LearningListPage";
+import LearningEditPage from "./LearningEditPage";
+import PatientListPage from "./PatientListPage";
+import PatientEditPage from "./PatientEditPage";
 
 const {Header, Footer, Content} = Layout;
 
@@ -211,6 +223,12 @@ class App extends Component {
     res.push(Setting.getItem(<Link to="/doctors">{i18next.t("general:Doctors")}</Link>, "doctors"));
     res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>, "assets"));
     res.push(Setting.getItem(<Link to="/providers">{i18next.t("general:Providers")}</Link>, "providers"));
+    res.push(Setting.getItem(<Link to="/caases">{i18next.t("general:Caases")}</Link>, "caases"));
+    res.push(Setting.getItem(<Link to="/consultations">{i18next.t("general:Consultations")}</Link>, "consultations"));
+    res.push(Setting.getItem(<Link to="/doctors">{i18next.t("general:Doctors")}</Link>, "doctors"));
+    res.push(Setting.getItem(<Link to="/hospitals">{i18next.t("general:Hospitals")}</Link>, "hospitals"));
+    res.push(Setting.getItem(<Link to="/learnings">{i18next.t("general:Learnings")}</Link>, "learnings"));
+    res.push(Setting.getItem(<Link to="/patients">{i18next.t("general:Patients")}</Link>, "patients"));
     res.push(Setting.getItem(<Link to="/machines">{i18next.t("general:Machines")}</Link>, "machines"));
     res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>, "sessions"));
     res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>, "records"));
@@ -253,6 +271,18 @@ class App extends Component {
         <Route exact path="/assets/:organizationName/:assetName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/providers" render={(props) => this.renderSigninIfNotSignedIn(<ProviderListPage account={this.state.account} {...props} />)} />
         <Route exact path="/providers/:organizationName/:providerName" render={(props) => this.renderSigninIfNotSignedIn(<ProviderEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/caases" render={(props) => this.renderSigninIfNotSignedIn(<CaaseListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/caases/:organizationName/:caaseName" render={(props) => this.renderSigninIfNotSignedIn(<CaaseEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/consultations" render={(props) => this.renderSigninIfNotSignedIn(<ConsultationListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/consultations/:organizationName/:consultationName" render={(props) => this.renderSigninIfNotSignedIn(<ConsultationEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/doctors" render={(props) => this.renderSigninIfNotSignedIn(<DoctorListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/doctors/:organizationName/:doctorName" render={(props) => this.renderSigninIfNotSignedIn(<DoctorEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/hospitals" render={(props) => this.renderSigninIfNotSignedIn(<HospitalListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/hospitals/:organizationName/:hospitalName" render={(props) => this.renderSigninIfNotSignedIn(<HospitalEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/learnings" render={(props) => this.renderSigninIfNotSignedIn(<LearningListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/learnings/:organizationName/:learningName" render={(props) => this.renderSigninIfNotSignedIn(<LearningEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/patients" render={(props) => this.renderSigninIfNotSignedIn(<PatientListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/patients/:organizationName/:patientName" render={(props) => this.renderSigninIfNotSignedIn(<PatientEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/machines" render={(props) => this.renderSigninIfNotSignedIn(<MachineListPage account={this.state.account} {...props} />)} />
         <Route exact path="/machines/:organizationName/:machineName" render={(props) => this.renderSigninIfNotSignedIn(<MachineEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/sessions" render={(props) => this.renderSigninIfNotSignedIn(<SessionListPage account={this.state.account} {...props} />)} />

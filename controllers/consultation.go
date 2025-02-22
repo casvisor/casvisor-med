@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2024 The casbin Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,11 +40,12 @@ func (c *ApiController) GetConsultations() {
 	sortOrder := c.Input().Get("sortOrder")
 
 	if limit == "" || page == "" {
-		consultations, err := object.GetConsultations()
+		consultations, err := object.GetMaskedConsultations(object.GetConsultations(owner))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		c.ResponseOk(consultations)
 	} else {
 		limit := util.ParseInt(limit)
@@ -53,12 +54,14 @@ func (c *ApiController) GetConsultations() {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		paginator := pagination.SetPaginator(c.Ctx, limit, count)
-		consultations, err := object.GetPaginationConsultation(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
+		consultations, err := object.GetMaskedConsultations(object.GetPaginationConsultations(owner, paginator.Offset(), limit, field, value, sortField, sortOrder))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		c.ResponseOk(consultations, paginator.Nums())
 	}
 }
@@ -67,13 +70,13 @@ func (c *ApiController) GetConsultations() {
 // @Title GetConsultation
 // @Tag Consultation API
 // @Description get consultation
-// @Param   id     query    string  true        "The id of the consultation"
+// @Param   id     query    string  true        "The id ( owner/name ) of the consultation"
 // @Success 200 {object} object.Consultation The Response object
 // @router /get-consultation [get]
 func (c *ApiController) GetConsultation() {
 	id := c.Input().Get("id")
 
-	consultation, err := object.GetConsultation(id)
+	consultation, err := object.GetMaskedConsultation(object.GetConsultation(id))
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
@@ -86,7 +89,7 @@ func (c *ApiController) GetConsultation() {
 // @Title UpdateConsultation
 // @Tag Consultation API
 // @Description update consultation
-// @Param   id     query    string  true        "The id of the consultation"
+// @Param   id     query    string  true        "The id ( owner/name ) of the consultation"
 // @Param   body    body   object.Consultation  true        "The details of the consultation"
 // @Success 200 {object} controllers.Response The Response object
 // @router /update-consultation [post]

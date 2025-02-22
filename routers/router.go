@@ -73,11 +73,11 @@ func initAPI() {
 	beego.Router("/api/add-asset-tunnel", &controllers.ApiController{}, "POST:AddAssetTunnel")
 	beego.Router("/api/get-asset-tunnel", &controllers.ApiController{}, "GET:GetAssetTunnel")
 
-	beego.Router("/api/get-cases", &controllers.ApiController{}, "GET:GetCases")
-	beego.Router("/api/get-case", &controllers.ApiController{}, "GET:GetCase")
-	beego.Router("/api/update-case", &controllers.ApiController{}, "POST:UpdateCase")
-	beego.Router("/api/add-case", &controllers.ApiController{}, "POST:AddCase")
-	beego.Router("/api/delete-case", &controllers.ApiController{}, "POST:DeleteCase")
+	beego.Router("/api/get-caases", &controllers.ApiController{}, "GET:GetCaases")
+	beego.Router("/api/get-caase", &controllers.ApiController{}, "GET:GetCaase")
+	beego.Router("/api/update-caase", &controllers.ApiController{}, "POST:UpdateCaase")
+	beego.Router("/api/add-caase", &controllers.ApiController{}, "POST:AddCaase")
+	beego.Router("/api/delete-caase", &controllers.ApiController{}, "POST:DeleteCaase")
 
 	beego.Router("/api/get-consultations", &controllers.ApiController{}, "GET:GetConsultations")
 	beego.Router("/api/get-consultation", &controllers.ApiController{}, "GET:GetConsultation")
@@ -91,17 +91,17 @@ func initAPI() {
 	beego.Router("/api/add-doctor", &controllers.ApiController{}, "POST:AddDoctor")
 	beego.Router("/api/delete-doctor", &controllers.ApiController{}, "POST:DeleteDoctor")
 
-	beego.Router("/api/get-fls", &controllers.ApiController{}, "GET:GetFLs")
-	beego.Router("/api/get-fl", &controllers.ApiController{}, "GET:GetFL")
-	beego.Router("/api/update-fl", &controllers.ApiController{}, "POST:UpdateFL")
-	beego.Router("/api/add-fl", &controllers.ApiController{}, "POST:AddFL")
-	beego.Router("/api/delete-fl", &controllers.ApiController{}, "POST:DeleteFL")
-
 	beego.Router("/api/get-hospitals", &controllers.ApiController{}, "GET:GetHospitals")
 	beego.Router("/api/get-hospital", &controllers.ApiController{}, "GET:GetHospital")
 	beego.Router("/api/update-hospital", &controllers.ApiController{}, "POST:UpdateHospital")
 	beego.Router("/api/add-hospital", &controllers.ApiController{}, "POST:AddHospital")
 	beego.Router("/api/delete-hospital", &controllers.ApiController{}, "POST:DeleteHospital")
+
+	beego.Router("/api/get-learnings", &controllers.ApiController{}, "GET:GetLearnings")
+	beego.Router("/api/get-learning", &controllers.ApiController{}, "GET:GetLearning")
+	beego.Router("/api/update-learning", &controllers.ApiController{}, "POST:UpdateLearning")
+	beego.Router("/api/add-learning", &controllers.ApiController{}, "POST:AddLearning")
+	beego.Router("/api/delete-learning", &controllers.ApiController{}, "POST:DeleteLearning")
 
 	beego.Router("/api/get-patients", &controllers.ApiController{}, "GET:GetPatients")
 	beego.Router("/api/get-patient", &controllers.ApiController{}, "GET:GetPatient")

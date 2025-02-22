@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2024 The casbin Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,11 +40,12 @@ func (c *ApiController) GetDoctors() {
 	sortOrder := c.Input().Get("sortOrder")
 
 	if limit == "" || page == "" {
-		doctors, err := object.GetDoctors(owner)
+		doctors, err := object.GetMaskedDoctors(object.GetDoctors(owner))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		c.ResponseOk(doctors)
 	} else {
 		limit := util.ParseInt(limit)
@@ -53,12 +54,14 @@ func (c *ApiController) GetDoctors() {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		paginator := pagination.SetPaginator(c.Ctx, limit, count)
-		doctors, err := object.GetPaginationDoctor(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
+		doctors, err := object.GetMaskedDoctors(object.GetPaginationDoctors(owner, paginator.Offset(), limit, field, value, sortField, sortOrder))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		c.ResponseOk(doctors, paginator.Nums())
 	}
 }
@@ -67,13 +70,13 @@ func (c *ApiController) GetDoctors() {
 // @Title GetDoctor
 // @Tag Doctor API
 // @Description get doctor
-// @Param   id     query    string  true        "The id of the doctor"
+// @Param   id     query    string  true        "The id ( owner/name ) of the doctor"
 // @Success 200 {object} object.Doctor The Response object
 // @router /get-doctor [get]
 func (c *ApiController) GetDoctor() {
 	id := c.Input().Get("id")
 
-	doctor, err := object.GetDoctor(id)
+	doctor, err := object.GetMaskedDoctor(object.GetDoctor(id))
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
@@ -86,7 +89,7 @@ func (c *ApiController) GetDoctor() {
 // @Title UpdateDoctor
 // @Tag Doctor API
 // @Description update doctor
-// @Param   id     query    string  true        "The id of the doctor"
+// @Param   id     query    string  true        "The id ( owner/name ) of the doctor"
 // @Param   body    body   object.Doctor  true        "The details of the doctor"
 // @Success 200 {object} controllers.Response The Response object
 // @router /update-doctor [post]

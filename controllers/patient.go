@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2024 The casbin Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,11 +40,12 @@ func (c *ApiController) GetPatients() {
 	sortOrder := c.Input().Get("sortOrder")
 
 	if limit == "" || page == "" {
-		patients, err := object.GetPatients()
+		patients, err := object.GetMaskedPatients(object.GetPatients(owner))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		c.ResponseOk(patients)
 	} else {
 		limit := util.ParseInt(limit)
@@ -53,12 +54,14 @@ func (c *ApiController) GetPatients() {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		paginator := pagination.SetPaginator(c.Ctx, limit, count)
-		patients, err := object.GetPaginationPatient(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
+		patients, err := object.GetMaskedPatients(object.GetPaginationPatients(owner, paginator.Offset(), limit, field, value, sortField, sortOrder))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		c.ResponseOk(patients, paginator.Nums())
 	}
 }
@@ -67,13 +70,13 @@ func (c *ApiController) GetPatients() {
 // @Title GetPatient
 // @Tag Patient API
 // @Description get patient
-// @Param   id     query    string  true        "The id of the patient"
+// @Param   id     query    string  true        "The id ( owner/name ) of the patient"
 // @Success 200 {object} object.Patient The Response object
 // @router /get-patient [get]
 func (c *ApiController) GetPatient() {
 	id := c.Input().Get("id")
 
-	patient, err := object.GetPatient(id)
+	patient, err := object.GetMaskedPatient(object.GetPatient(id))
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
@@ -86,7 +89,7 @@ func (c *ApiController) GetPatient() {
 // @Title UpdatePatient
 // @Tag Patient API
 // @Description update patient
-// @Param   id     query    string  true        "The id of the patient"
+// @Param   id     query    string  true        "The id ( owner/name ) of the patient"
 // @Param   body    body   object.Patient  true        "The details of the patient"
 // @Success 200 {object} controllers.Response The Response object
 // @router /update-patient [post]

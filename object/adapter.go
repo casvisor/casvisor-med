@@ -126,12 +126,35 @@ func (a *Adapter) createTable() {
 		panic(err)
 	}
 
-	err = a.engine.Sync2(new(Case))
+	err = a.engine.Sync2(new(Caase))
+	if err != nil {
+		panic(err)
+	}
+
+	err = a.engine.Sync2(new(Consultation))
 	if err != nil {
 		panic(err)
 	}
 
 	err = a.engine.Sync2(new(Doctor))
+	if err != nil {
+		panic(err)
+	}
+
+	err = a.engine.Sync2(new(Hospital))
+	if err != nil {
+		panic(err)
+	}
+
+	err = a.engine.Sync2(new(Learning))
+	if err != nil {
+		panic(err)
+	}
+
+	err = a.engine.Sync2(new(Patient))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func GetSession(owner string, offset, limit int, field, value, sortField, sortOrder string) *xorm.Session {

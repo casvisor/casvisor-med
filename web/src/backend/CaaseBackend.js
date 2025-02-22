@@ -14,43 +14,43 @@
 
 import * as Setting from "../Setting";
 
-export function getDoctors(owner, page = "", pageSize = "", field = "", value = "", sortField = "", sortOrder = "") {
-  return fetch(`${Setting.ServerUrl}/api/get-doctors?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}`, {
+export function getCaases(owner, page = "", pageSize = "", field = "", value = "", sortField = "", sortOrder = "") {
+  return fetch(`${Setting.ServerUrl}/api/get-caases?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}`, {
     method: "GET",
     credentials: "include",
   }).then(res => res.json());
 }
 
-export function getDoctor(owner, name) {
-  return fetch(`${Setting.ServerUrl}/api/get-doctor?id=${owner}/${encodeURIComponent(name)}`, {
+export function getCaase(owner, name) {
+  return fetch(`${Setting.ServerUrl}/api/get-caase?id=${owner}/${encodeURIComponent(name)}`, {
     method: "GET",
     credentials: "include",
   }).then(res => res.json());
 }
 
-export function updateDoctor(owner, name, doctor) {
-  const newDoctor = Setting.deepCopy(doctor);
-  return fetch(`${Setting.ServerUrl}/api/update-doctor?id=${owner}/${encodeURIComponent(name)}`, {
+export function updateCaase(owner, name, caase) {
+  const newCaase = Setting.deepCopy(caase);
+  return fetch(`${Setting.ServerUrl}/api/update-caase?id=${owner}/${encodeURIComponent(name)}`, {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify(newDoctor),
+    body: JSON.stringify(newCaase),
   }).then(res => res.json());
 }
 
-export function addDoctor(doctor) {
-  const newDoctor = Setting.deepCopy(doctor);
-  return fetch(`${Setting.ServerUrl}/api/add-doctor`, {
+export function addCaase(caase) {
+  const newCaase = Setting.deepCopy(caase);
+  return fetch(`${Setting.ServerUrl}/api/add-caase`, {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify(newDoctor),
+    body: JSON.stringify(newCaase),
   }).then(res => res.json());
 }
 
-export function deleteDoctor(doctor) {
-  const newDoctor = Setting.deepCopy(doctor);
-  return fetch(`${Setting.ServerUrl}/api/delete-doctor`, {
+export function deleteCaase(caase) {
+  const newCaase = Setting.deepCopy(caase);
+  return fetch(`${Setting.ServerUrl}/api/delete-caase`, {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify(newDoctor),
+    body: JSON.stringify(newCaase),
   }).then(res => res.json());
 }

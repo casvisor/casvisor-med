@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2024 The casbin Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
 package object
 
 import (
+	"fmt"
+
 	"github.com/casvisor/casvisor/util"
 	"xorm.io/core"
 )
@@ -26,11 +28,18 @@ type Doctor struct {
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Department  string `xorm:"varchar(100)" json:"department"`
-	Gender      string `xorm:"varchar(100)" json:"gender"`
-	AccessLevel string `xorm:"varchar(100)" json:"accessLevel"`
+	Category string `xorm:"varchar(100)" json:"category"`
+	Type     string `xorm:"varchar(100)" json:"type"`
 
-	HospitalName string `xorm:"varchar(100)" json:"hospitalName"`
+	ClientId     string `xorm:"varchar(100)" json:"clientId"`
+	ClientSecret string `xorm:"varchar(100)" json:"clientSecret"`
+	Region       string `xorm:"varchar(100)" json:"region"`
+	Network      string `xorm:"varchar(100)" json:"network"`
+	Chain        string `xorm:"varchar(100)" json:"chain"`
+	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
+
+	State     string `xorm:"varchar(100)" json:"state"`
+	DoctorUrl string `xorm:"varchar(200)" json:"doctorUrl"`
 }
 
 func GetDoctorCount(owner, field, value string) (int64, error) {
@@ -44,10 +53,11 @@ func GetDoctors(owner string) ([]*Doctor, error) {
 	if err != nil {
 		return doctors, err
 	}
+
 	return doctors, nil
 }
 
-func GetPaginationDoctor(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Doctor, error) {
+func GetPaginationDoctors(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Doctor, error) {
 	doctors := []*Doctor{}
 	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)
 	err := session.Find(&doctors)
@@ -57,15 +67,18 @@ func GetPaginationDoctor(owner string, offset, limit int, field, value, sortFiel
 
 	return doctors, nil
 }
-func getDoctor(owner, name string) (*Doctor, error) {
+
+func getDoctor(owner string, name string) (*Doctor, error) {
 	if owner == "" || name == "" {
 		return nil, nil
 	}
+
 	doctor := Doctor{Owner: owner, Name: name}
 	existed, err := adapter.engine.Get(&doctor)
 	if err != nil {
 		return &doctor, err
 	}
+
 	if existed {
 		return &doctor, nil
 	} else {
@@ -78,6 +91,37 @@ func GetDoctor(id string) (*Doctor, error) {
 	return getDoctor(owner, name)
 }
 
+func GetMaskedDoctor(doctor *Doctor, errs ...error) (*Doctor, error) {
+	if len(errs) > 0 && errs[0] != nil {
+		return nil, errs[0]
+	}
+
+	if doctor == nil {
+		return nil, nil
+	}
+
+	if doctor.ClientSecret != "" {
+		doctor.ClientSecret = "***"
+	}
+	return doctor, nil
+}
+
+func GetMaskedDoctors(doctors []*Doctor, errs ...error) ([]*Doctor, error) {
+	if len(errs) > 0 && errs[0] != nil {
+		return nil, errs[0]
+	}
+
+	var err error
+	for _, doctor := range doctors {
+		doctor, err = GetMaskedDoctor(doctor)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return doctors, nil
+}
+
 func UpdateDoctor(id string, doctor *Doctor) (bool, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
 	p, err := getDoctor(owner, name)
@@ -87,10 +131,15 @@ func UpdateDoctor(id string, doctor *Doctor) (bool, error) {
 		return false, nil
 	}
 
+	if doctor.ClientSecret == "***" {
+		doctor.ClientSecret = p.ClientSecret
+	}
+
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(doctor)
 	if err != nil {
 		return false, err
 	}
+
 	return affected != 0, nil
 }
 
@@ -100,7 +149,7 @@ func AddDoctor(doctor *Doctor) (bool, error) {
 		return false, err
 	}
 
-	return affected!=0, nil
+	return affected != 0, nil
 }
 
 func DeleteDoctor(doctor *Doctor) (bool, error) {
@@ -108,6 +157,10 @@ func DeleteDoctor(doctor *Doctor) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+
 	return affected != 0, nil
 }
 
+func (doctor *Doctor) getId() string {
+	return fmt.Sprintf("%s/%s", doctor.Owner, doctor.Name)
+}

@@ -21,7 +21,7 @@ import (
 	"xorm.io/core"
 )
 
-type Hospital struct {
+type Learning struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
@@ -39,103 +39,103 @@ type Hospital struct {
 	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
 
 	State       string `xorm:"varchar(100)" json:"state"`
-	HospitalUrl string `xorm:"varchar(200)" json:"hospitalUrl"`
+	LearningUrl string `xorm:"varchar(200)" json:"learningUrl"`
 }
 
-func GetHospitalCount(owner, field, value string) (int64, error) {
+func GetLearningCount(owner, field, value string) (int64, error) {
 	session := GetSession(owner, -1, -1, field, value, "", "")
-	return session.Count(&Hospital{})
+	return session.Count(&Learning{})
 }
 
-func GetHospitals(owner string) ([]*Hospital, error) {
-	hospitals := []*Hospital{}
-	err := adapter.engine.Desc("created_time").Find(&hospitals, &Hospital{Owner: owner})
+func GetLearnings(owner string) ([]*Learning, error) {
+	learnings := []*Learning{}
+	err := adapter.engine.Desc("created_time").Find(&learnings, &Learning{Owner: owner})
 	if err != nil {
-		return hospitals, err
+		return learnings, err
 	}
 
-	return hospitals, nil
+	return learnings, nil
 }
 
-func GetPaginationHospitals(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Hospital, error) {
-	hospitals := []*Hospital{}
+func GetPaginationLearnings(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Learning, error) {
+	learnings := []*Learning{}
 	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)
-	err := session.Find(&hospitals)
+	err := session.Find(&learnings)
 	if err != nil {
-		return hospitals, err
+		return learnings, err
 	}
 
-	return hospitals, nil
+	return learnings, nil
 }
 
-func getHospital(owner string, name string) (*Hospital, error) {
+func getLearning(owner string, name string) (*Learning, error) {
 	if owner == "" || name == "" {
 		return nil, nil
 	}
 
-	hospital := Hospital{Owner: owner, Name: name}
-	existed, err := adapter.engine.Get(&hospital)
+	learning := Learning{Owner: owner, Name: name}
+	existed, err := adapter.engine.Get(&learning)
 	if err != nil {
-		return &hospital, err
+		return &learning, err
 	}
 
 	if existed {
-		return &hospital, nil
+		return &learning, nil
 	} else {
 		return nil, nil
 	}
 }
 
-func GetHospital(id string) (*Hospital, error) {
+func GetLearning(id string) (*Learning, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
-	return getHospital(owner, name)
+	return getLearning(owner, name)
 }
 
-func GetMaskedHospital(hospital *Hospital, errs ...error) (*Hospital, error) {
+func GetMaskedLearning(learning *Learning, errs ...error) (*Learning, error) {
 	if len(errs) > 0 && errs[0] != nil {
 		return nil, errs[0]
 	}
 
-	if hospital == nil {
+	if learning == nil {
 		return nil, nil
 	}
 
-	if hospital.ClientSecret != "" {
-		hospital.ClientSecret = "***"
+	if learning.ClientSecret != "" {
+		learning.ClientSecret = "***"
 	}
-	return hospital, nil
+	return learning, nil
 }
 
-func GetMaskedHospitals(hospitals []*Hospital, errs ...error) ([]*Hospital, error) {
+func GetMaskedLearnings(learnings []*Learning, errs ...error) ([]*Learning, error) {
 	if len(errs) > 0 && errs[0] != nil {
 		return nil, errs[0]
 	}
 
 	var err error
-	for _, hospital := range hospitals {
-		hospital, err = GetMaskedHospital(hospital)
+	for _, learning := range learnings {
+		learning, err = GetMaskedLearning(learning)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return hospitals, nil
+	return learnings, nil
 }
 
-func UpdateHospital(id string, hospital *Hospital) (bool, error) {
+func UpdateLearning(id string, learning *Learning) (bool, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
-	p, err := getHospital(owner, name)
+	p, err := getLearning(owner, name)
 	if err != nil {
 		return false, err
 	} else if p == nil {
 		return false, nil
 	}
 
-	if hospital.ClientSecret == "***" {
-		hospital.ClientSecret = p.ClientSecret
+	if learning.ClientSecret == "***" {
+		learning.ClientSecret = p.ClientSecret
 	}
 
-	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(hospital)
+	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(learning)
 	if err != nil {
 		return false, err
 	}
@@ -143,8 +143,8 @@ func UpdateHospital(id string, hospital *Hospital) (bool, error) {
 	return affected != 0, nil
 }
 
-func AddHospital(hospital *Hospital) (bool, error) {
-	affected, err := adapter.engine.Insert(hospital)
+func AddLearning(learning *Learning) (bool, error) {
+	affected, err := adapter.engine.Insert(learning)
 	if err != nil {
 		return false, err
 	}
@@ -152,8 +152,8 @@ func AddHospital(hospital *Hospital) (bool, error) {
 	return affected != 0, nil
 }
 
-func DeleteHospital(hospital *Hospital) (bool, error) {
-	affected, err := adapter.engine.ID(core.PK{hospital.Owner, hospital.Name}).Delete(&Hospital{})
+func DeleteLearning(learning *Learning) (bool, error) {
+	affected, err := adapter.engine.ID(core.PK{learning.Owner, learning.Name}).Delete(&Learning{})
 	if err != nil {
 		return false, err
 	}
@@ -161,6 +161,6 @@ func DeleteHospital(hospital *Hospital) (bool, error) {
 	return affected != 0, nil
 }
 
-func (hospital *Hospital) getId() string {
-	return fmt.Sprintf("%s/%s", hospital.Owner, hospital.Name)
+func (learning *Learning) getId() string {
+	return fmt.Sprintf("%s/%s", learning.Owner, learning.Name)
 }

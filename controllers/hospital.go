@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2024 The casbin Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,11 +40,12 @@ func (c *ApiController) GetHospitals() {
 	sortOrder := c.Input().Get("sortOrder")
 
 	if limit == "" || page == "" {
-		hospitals, err := object.GetHospitals()
+		hospitals, err := object.GetMaskedHospitals(object.GetHospitals(owner))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		c.ResponseOk(hospitals)
 	} else {
 		limit := util.ParseInt(limit)
@@ -53,12 +54,14 @@ func (c *ApiController) GetHospitals() {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		paginator := pagination.SetPaginator(c.Ctx, limit, count)
-		hospitals, err := object.GetPaginationHospital(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
+		hospitals, err := object.GetMaskedHospitals(object.GetPaginationHospitals(owner, paginator.Offset(), limit, field, value, sortField, sortOrder))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
+
 		c.ResponseOk(hospitals, paginator.Nums())
 	}
 }
@@ -67,13 +70,13 @@ func (c *ApiController) GetHospitals() {
 // @Title GetHospital
 // @Tag Hospital API
 // @Description get hospital
-// @Param   id     query    string  true        "The id of the hospital"
+// @Param   id     query    string  true        "The id ( owner/name ) of the hospital"
 // @Success 200 {object} object.Hospital The Response object
 // @router /get-hospital [get]
 func (c *ApiController) GetHospital() {
 	id := c.Input().Get("id")
 
-	hospital, err := object.GetHospital(id)
+	hospital, err := object.GetMaskedHospital(object.GetHospital(id))
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
@@ -86,7 +89,7 @@ func (c *ApiController) GetHospital() {
 // @Title UpdateHospital
 // @Tag Hospital API
 // @Description update hospital
-// @Param   id     query    string  true        "The id of the hospital"
+// @Param   id     query    string  true        "The id ( owner/name ) of the hospital"
 // @Param   body    body   object.Hospital  true        "The details of the hospital"
 // @Success 200 {object} controllers.Response The Response object
 // @router /update-hospital [post]

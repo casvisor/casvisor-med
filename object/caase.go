@@ -21,7 +21,7 @@ import (
 	"xorm.io/core"
 )
 
-type Hospital struct {
+type Caase struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
@@ -38,104 +38,104 @@ type Hospital struct {
 	Chain        string `xorm:"varchar(100)" json:"chain"`
 	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
 
-	State       string `xorm:"varchar(100)" json:"state"`
-	HospitalUrl string `xorm:"varchar(200)" json:"hospitalUrl"`
+	State    string `xorm:"varchar(100)" json:"state"`
+	CaaseUrl string `xorm:"varchar(200)" json:"caaseUrl"`
 }
 
-func GetHospitalCount(owner, field, value string) (int64, error) {
+func GetCaaseCount(owner, field, value string) (int64, error) {
 	session := GetSession(owner, -1, -1, field, value, "", "")
-	return session.Count(&Hospital{})
+	return session.Count(&Caase{})
 }
 
-func GetHospitals(owner string) ([]*Hospital, error) {
-	hospitals := []*Hospital{}
-	err := adapter.engine.Desc("created_time").Find(&hospitals, &Hospital{Owner: owner})
+func GetCaases(owner string) ([]*Caase, error) {
+	caases := []*Caase{}
+	err := adapter.engine.Desc("created_time").Find(&caases, &Caase{Owner: owner})
 	if err != nil {
-		return hospitals, err
+		return caases, err
 	}
 
-	return hospitals, nil
+	return caases, nil
 }
 
-func GetPaginationHospitals(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Hospital, error) {
-	hospitals := []*Hospital{}
+func GetPaginationCaases(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Caase, error) {
+	caases := []*Caase{}
 	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)
-	err := session.Find(&hospitals)
+	err := session.Find(&caases)
 	if err != nil {
-		return hospitals, err
+		return caases, err
 	}
 
-	return hospitals, nil
+	return caases, nil
 }
 
-func getHospital(owner string, name string) (*Hospital, error) {
+func getCaase(owner string, name string) (*Caase, error) {
 	if owner == "" || name == "" {
 		return nil, nil
 	}
 
-	hospital := Hospital{Owner: owner, Name: name}
-	existed, err := adapter.engine.Get(&hospital)
+	caase := Caase{Owner: owner, Name: name}
+	existed, err := adapter.engine.Get(&caase)
 	if err != nil {
-		return &hospital, err
+		return &caase, err
 	}
 
 	if existed {
-		return &hospital, nil
+		return &caase, nil
 	} else {
 		return nil, nil
 	}
 }
 
-func GetHospital(id string) (*Hospital, error) {
+func GetCaase(id string) (*Caase, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
-	return getHospital(owner, name)
+	return getCaase(owner, name)
 }
 
-func GetMaskedHospital(hospital *Hospital, errs ...error) (*Hospital, error) {
+func GetMaskedCaase(caase *Caase, errs ...error) (*Caase, error) {
 	if len(errs) > 0 && errs[0] != nil {
 		return nil, errs[0]
 	}
 
-	if hospital == nil {
+	if caase == nil {
 		return nil, nil
 	}
 
-	if hospital.ClientSecret != "" {
-		hospital.ClientSecret = "***"
+	if caase.ClientSecret != "" {
+		caase.ClientSecret = "***"
 	}
-	return hospital, nil
+	return caase, nil
 }
 
-func GetMaskedHospitals(hospitals []*Hospital, errs ...error) ([]*Hospital, error) {
+func GetMaskedCaases(caases []*Caase, errs ...error) ([]*Caase, error) {
 	if len(errs) > 0 && errs[0] != nil {
 		return nil, errs[0]
 	}
 
 	var err error
-	for _, hospital := range hospitals {
-		hospital, err = GetMaskedHospital(hospital)
+	for _, caase := range caases {
+		caase, err = GetMaskedCaase(caase)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return hospitals, nil
+	return caases, nil
 }
 
-func UpdateHospital(id string, hospital *Hospital) (bool, error) {
+func UpdateCaase(id string, caase *Caase) (bool, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
-	p, err := getHospital(owner, name)
+	p, err := getCaase(owner, name)
 	if err != nil {
 		return false, err
 	} else if p == nil {
 		return false, nil
 	}
 
-	if hospital.ClientSecret == "***" {
-		hospital.ClientSecret = p.ClientSecret
+	if caase.ClientSecret == "***" {
+		caase.ClientSecret = p.ClientSecret
 	}
 
-	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(hospital)
+	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(caase)
 	if err != nil {
 		return false, err
 	}
@@ -143,8 +143,8 @@ func UpdateHospital(id string, hospital *Hospital) (bool, error) {
 	return affected != 0, nil
 }
 
-func AddHospital(hospital *Hospital) (bool, error) {
-	affected, err := adapter.engine.Insert(hospital)
+func AddCaase(caase *Caase) (bool, error) {
+	affected, err := adapter.engine.Insert(caase)
 	if err != nil {
 		return false, err
 	}
@@ -152,8 +152,8 @@ func AddHospital(hospital *Hospital) (bool, error) {
 	return affected != 0, nil
 }
 
-func DeleteHospital(hospital *Hospital) (bool, error) {
-	affected, err := adapter.engine.ID(core.PK{hospital.Owner, hospital.Name}).Delete(&Hospital{})
+func DeleteCaase(caase *Caase) (bool, error) {
+	affected, err := adapter.engine.ID(core.PK{caase.Owner, caase.Name}).Delete(&Caase{})
 	if err != nil {
 		return false, err
 	}
@@ -161,6 +161,6 @@ func DeleteHospital(hospital *Hospital) (bool, error) {
 	return affected != 0, nil
 }
 
-func (hospital *Hospital) getId() string {
-	return fmt.Sprintf("%s/%s", hospital.Owner, hospital.Name)
+func (caase *Caase) getId() string {
+	return fmt.Sprintf("%s/%s", caase.Owner, caase.Name)
 }
