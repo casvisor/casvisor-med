@@ -34,12 +34,10 @@ class DoctorListPage extends BaseListPage {
       createdTime: moment().format(),
       updatedTime: moment().format(),
       displayName: `New Doctor - ${Setting.getRandomName()}`,
-      category: "Public Cloud",
-      type: "Amazon Web Services",
-      clientId: "",
-      clientSecret: "",
-      region: "us-west",
-      state: "Active",
+      department: "General",
+      gender: "Unknown",
+      accessLevel: "Standard",
+      hospitalName: "Unknown",
     };
   }
 
@@ -48,13 +46,16 @@ class DoctorListPage extends BaseListPage {
     DoctorBackend.addDoctor(newDoctor)
       .then((res) => {
         if (res.status === "ok") {
-          this.props.history.push({pathname: `/doctors/${newDoctor.owner}/${newDoctor.name}`, mode: "add"});
+          this.props.history.push({
+            pathname: `/doctors/${newDoctor.owner}/${newDoctor.name}`,
+            mode: "add",
+          });
           Setting.showMessage("success", "Doctor added successfully");
         } else {
           Setting.showMessage("error", `Failed to add Doctor: ${res.msg}`);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         Setting.showMessage("error", `Doctor failed to add: ${error}`);
       });
   }
@@ -75,7 +76,7 @@ class DoctorListPage extends BaseListPage {
           Setting.showMessage("error", `Failed to delete Doctor: ${res.msg}`);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         Setting.showMessage("error", `Doctor failed to delete: ${error}`);
       });
   }
@@ -91,7 +92,14 @@ class DoctorListPage extends BaseListPage {
         ...this.getColumnSearchProps("owner"),
         render: (text, doctor, index) => {
           return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/organizations/${text}`)}>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={Setting.getMyProfileUrl(this.props.account).replace(
+                "/account",
+                `/organizations/${text}`,
+              )}
+            >
               {text}
             </a>
           );
@@ -122,85 +130,67 @@ class DoctorListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Category"),
-        dataIndex: "category",
-        key: "category",
+        title: i18next.t("general:Department"),
+        dataIndex: "department",
+        key: "department",
         width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
+        sorter: (a, b) => a.department.localeCompare(b.department),
       },
+
       {
-        title: i18next.t("general:Type"),
-        dataIndex: "type",
-        key: "type",
+        title: i18next.t("general:Gender"),
+        dataIndex: "gender",
+        key: "gender",
+        width: "100px",
+        sorter: (a, b) => a.gender.localeCompare(b.gender),
+      },
+
+      {
+        title: i18next.t("general:Access Level"),
+        dataIndex: "accessLevel",
+        key: "accessLevel",
         width: "120px",
-        sorter: (a, b) => a.type.localeCompare(b.type),
+        sorter: (a, b) => a.accessLevel.localeCompare(b.accessLevel),
       },
+
       {
-        title: i18next.t("general:Client ID"),
-        dataIndex: "clientId",
-        key: "clientId",
-        width: "120px",
-        sorter: (a, b) => a.clientId.localeCompare(b.clientId),
-      },
-      {
-        title: i18next.t("general:Client secret"),
-        dataIndex: "clientSecret",
-        key: "clientSecret",
-        width: "120px",
-        sorter: (a, b) => a.clientSecret.localeCompare(b.clientSecret),
-      },
-      {
-        title: i18next.t("general:Region"),
-        dataIndex: "region",
-        key: "region",
-        width: "90px",
-        sorter: (a, b) => a.region.localeCompare(b.region),
-      },
-      {
-        title: i18next.t("doctor:Doctor URL"),
-        dataIndex: "doctorUrl",
-        key: "doctorUrl",
+        title: i18next.t("general:Hospital Name"),
+        dataIndex: "hospitalName",
+        key: "hospitalName",
         width: "150px",
-        sorter: true,
-        ...this.getColumnSearchProps("doctorUrl"),
-        render: (text, record, index) => {
-          return (
-            <a target="_blank" rel="noreferrer" href={text}>
-              {
-                Setting.getShortText(text)
-              }
-            </a>
-          );
-        },
-      },
-      {
-        title: i18next.t("general:State"),
-        dataIndex: "state",
-        key: "state",
-        width: "90px",
-        sorter: (a, b) => a.state.localeCompare(b.state),
+        sorter: (a, b) => a.hospitalName.localeCompare(b.hospitalName),
       },
       {
         title: i18next.t("general:Action"),
         dataIndex: "action",
         key: "action",
         width: "130px",
-        fixed: (Setting.isMobile()) ? "false" : "right",
+        fixed: Setting.isMobile() ? "false" : "right",
         render: (text, doctor, index) => {
           return (
             <div>
               <Button
-                style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
-                onClick={() => this.props.history.push(`/doctors/${doctor.owner}/${doctor.name}`)}
-              >{i18next.t("general:Edit")}
+                style={{
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                  marginRight: "10px",
+                }}
+                onClick={() =>
+                  this.props.history.push(
+                    `/doctors/${doctor.owner}/${doctor.name}`,
+                  )
+                }
+              >
+                {i18next.t("general:Edit")}
               </Button>
               <PopconfirmModal
                 disabled={doctor.owner !== this.props.account.owner}
                 style={{marginBottom: "10px"}}
-                title={i18next.t("general:Sure to delete") + `: ${doctor.name} ?`}
+                title={
+                  i18next.t("general:Sure to delete") + `: ${doctor.name} ?`
+                }
                 onConfirm={() => this.deleteDoctor(index)}
-              >
-              </PopconfirmModal>
+              ></PopconfirmModal>
             </div>
           );
         },
@@ -212,16 +202,32 @@ class DoctorListPage extends BaseListPage {
       total: this.state.pagination.total,
       showQuickJumper: true,
       showSizeChanger: true,
-      showTotal: () => i18next.t("general:{total} in total").replace("{total}", this.state.pagination.total),
+      showTotal: () =>
+        i18next
+          .t("general:{total} in total")
+          .replace("{total}", this.state.pagination.total),
     };
 
     return (
       <div>
-        <Table scroll={{x: "max-content"}} columns={columns} dataSource={doctors} rowKey={(doctor) => `${doctor.owner}/${doctor.name}`} size="middle" bordered pagination={paginationProps}
+        <Table
+          scroll={{x: "max-content"}}
+          columns={columns}
+          dataSource={doctors}
+          rowKey={(doctor) => `${doctor.owner}/${doctor.name}`}
+          size="middle"
+          bordered
+          pagination={paginationProps}
           title={() => (
             <div>
               {i18next.t("general:Doctors")}&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" size="small" onClick={this.addDoctor.bind(this)}>{i18next.t("general:Add")}</Button>
+              <Button
+                type="primary"
+                size="small"
+                onClick={this.addDoctor.bind(this)}
+              >
+                {i18next.t("general:Add")}
+              </Button>
             </div>
           )}
           loading={this.state.loading}
@@ -232,38 +238,47 @@ class DoctorListPage extends BaseListPage {
   }
 
   fetch = (params = {}) => {
-    let field = params.searchedColumn, value = params.searchText;
-    const sortField = params.sortField, sortOrder = params.sortOrder;
+    let field = params.searchedColumn,
+      value = params.searchText;
+    const sortField = params.sortField,
+      sortOrder = params.sortOrder;
     if (params.type !== undefined && params.type !== null) {
       field = "type";
       value = params.type;
     }
     this.setState({loading: true});
-    DoctorBackend.getDoctors(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
-      .then((res) => {
+    DoctorBackend.getDoctors(
+      Setting.getRequestOrganization(this.props.account),
+      params.pagination.current,
+      params.pagination.pageSize,
+      field,
+      value,
+      sortField,
+      sortOrder,
+    ).then((res) => {
+      this.setState({
+        loading: false,
+      });
+      if (res.status === "ok") {
         this.setState({
-          loading: false,
+          data: res.data,
+          pagination: {
+            ...params.pagination,
+            total: res.data2,
+          },
+          searchText: params.searchText,
+          searchedColumn: params.searchedColumn,
         });
-        if (res.status === "ok") {
+      } else {
+        if (Setting.isResponseDenied(res)) {
           this.setState({
-            data: res.data,
-            pagination: {
-              ...params.pagination,
-              total: res.data2,
-            },
-            searchText: params.searchText,
-            searchedColumn: params.searchedColumn,
+            isAuthorized: false,
           });
         } else {
-          if (Setting.isResponseDenied(res)) {
-            this.setState({
-              isAuthorized: false,
-            });
-          } else {
-            Setting.showMessage("error", res.msg);
-          }
+          Setting.showMessage("error", res.msg);
         }
-      });
+      }
+    });
   };
 }
 

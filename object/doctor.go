@@ -28,18 +28,11 @@ type Doctor struct {
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Category string `xorm:"varchar(100)" json:"category"`
-	Type     string `xorm:"varchar(100)" json:"type"`
+	Department  string `xorm:"varchar(100)" json:"department"`
+	Gender      string `xorm:"varchar(100)" json:"gender"`
+	AccessLevel string `xorm:"varchar(100)" json:"accessLevel"`
 
-	ClientId     string `xorm:"varchar(100)" json:"clientId"`
-	ClientSecret string `xorm:"varchar(100)" json:"clientSecret"`
-	Region       string `xorm:"varchar(100)" json:"region"`
-	Network      string `xorm:"varchar(100)" json:"network"`
-	Chain        string `xorm:"varchar(100)" json:"chain"`
-	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
-
-	State     string `xorm:"varchar(100)" json:"state"`
-	DoctorUrl string `xorm:"varchar(200)" json:"doctorUrl"`
+	HospitalName string `xorm:"varchar(100) index" json:"hospitalName"`
 }
 
 func GetDoctorCount(owner, field, value string) (int64, error) {
@@ -100,9 +93,9 @@ func GetMaskedDoctor(doctor *Doctor, errs ...error) (*Doctor, error) {
 		return nil, nil
 	}
 
-	if doctor.ClientSecret != "" {
-		doctor.ClientSecret = "***"
-	}
+	// if doctor.ClientSecret != "" {
+	// 	doctor.ClientSecret = "***"
+	// }
 	return doctor, nil
 }
 
@@ -131,9 +124,9 @@ func UpdateDoctor(id string, doctor *Doctor) (bool, error) {
 		return false, nil
 	}
 
-	if doctor.ClientSecret == "***" {
-		doctor.ClientSecret = p.ClientSecret
-	}
+	// if doctor.ClientSecret == "***" {
+	// 	doctor.ClientSecret = p.ClientSecret
+	// }
 
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(doctor)
 	if err != nil {
