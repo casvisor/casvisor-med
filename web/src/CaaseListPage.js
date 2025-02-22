@@ -34,12 +34,18 @@ class CaaseListPage extends BaseListPage {
       createdTime: moment().format(),
       updatedTime: moment().format(),
       displayName: `New Caase - ${Setting.getRandomName()}`,
-      category: "Public Cloud",
-      type: "Amazon Web Services",
-      clientId: "",
-      clientSecret: "",
-      region: "us-west",
-      state: "Active",
+      symptoms: "",
+      diagnosis: "",
+      diagnosisDate: moment().format(),
+      prescription: "",
+      followUp: "",
+      variation: false,
+      HISInterfaceInfo: "",
+      primaryCarePhysician: "",
+      patientName: "",
+      doctorName: "",
+      specialistAllianceID: "",
+      integratedCareOrganizationID: "",
     };
   }
 
@@ -48,13 +54,16 @@ class CaaseListPage extends BaseListPage {
     CaaseBackend.addCaase(newCaase)
       .then((res) => {
         if (res.status === "ok") {
-          this.props.history.push({pathname: `/caases/${newCaase.owner}/${newCaase.name}`, mode: "add"});
+          this.props.history.push({
+            pathname: `/caases/${newCaase.owner}/${newCaase.name}`,
+            mode: "add",
+          });
           Setting.showMessage("success", "Caase added successfully");
         } else {
           Setting.showMessage("error", `Failed to add Caase: ${res.msg}`);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         Setting.showMessage("error", `Caase failed to add: ${error}`);
       });
   }
@@ -75,7 +84,7 @@ class CaaseListPage extends BaseListPage {
           Setting.showMessage("error", `Failed to delete Caase: ${res.msg}`);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         Setting.showMessage("error", `Caase failed to delete: ${error}`);
       });
   }
@@ -91,7 +100,14 @@ class CaaseListPage extends BaseListPage {
         ...this.getColumnSearchProps("owner"),
         render: (text, caase, index) => {
           return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/organizations/${text}`)}>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={Setting.getMyProfileUrl(this.props.account).replace(
+                "/account",
+                `/organizations/${text}`
+              )}
+            >
               {text}
             </a>
           );
@@ -122,11 +138,61 @@ class CaaseListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Category"),
-        dataIndex: "category",
-        key: "category",
+        title: i18next.t("general:Symptoms"),
+        dataIndex: "symptoms",
+        key: "symptoms",
+        width: "160px",
+        sorter: (a, b) => a.symptoms.localeCompare(b.symptoms),
+      },
+      {
+        title: i18next.t("general:Diagnosis"),
+        dataIndex: "diagnosis",
+        key: "diagnosis",
+        width: "160px",
+        sorter: (a, b) => a.diagnosis.localeCompare(b.diagnosis),
+      },
+      {
+        title: i18next.t("general:Diagnosis Date"),
+        dataIndex: "diagnosisDate",
+        key: "diagnosisDate",
+        width: "160px",
+        sorter: (a, b) => a.diagnosisDate.localeCompare(b.diagnosisDate),
+      },
+      {
+        title: i18next.t("general:Prescription"),
+        dataIndex: "prescription",
+        key: "prescription",
+        width: "160px",
+        sorter: (a, b) => a.prescription.localeCompare(b.prescription),
+      },
+      {
+        title: i18next.t("general:Follow Up"),
+        dataIndex: "followUp",
+        key: "followUp",
+        width: "160px",
+        sorter: (a, b) => a.followUp.localeCompare(b.followUp),
+      },
+      {
+        title: i18next.t("general:Variation"),
+        dataIndex: "variation",
+        key: "variation",
         width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
+        sorter: (a, b) => a.variation - b.variation,
+      },
+      {
+        title: i18next.t("general:HIS Interface Info"),
+        dataIndex: "HISInterfaceInfo",
+        key: "HISInterfaceInfo",
+        width: "160px",
+        sorter: (a, b) => a.HISInterfaceInfo.localeCompare(b.HISInterfaceInfo),
+      },
+      {
+        title: i18next.t("general:Primary Care Physician"),
+        dataIndex: "primaryCarePhysician",
+        key: "primaryCarePhysician",
+        width: "160px",
+        sorter: (a, b) =>
+          a.primaryCarePhysician.localeCompare(b.primaryCarePhysician),
       },
       {
         title: i18next.t("general:Type"),
@@ -136,71 +202,68 @@ class CaaseListPage extends BaseListPage {
         sorter: (a, b) => a.type.localeCompare(b.type),
       },
       {
-        title: i18next.t("general:Client ID"),
-        dataIndex: "clientId",
-        key: "clientId",
-        width: "120px",
-        sorter: (a, b) => a.clientId.localeCompare(b.clientId),
+        title: i18next.t("general:Patient Name"),
+        dataIndex: "patientName",
+        key: "patientName",
+        width: "160px",
+        sorter: (a, b) => a.patientName.localeCompare(b.patientName),
       },
       {
-        title: i18next.t("general:Client secret"),
-        dataIndex: "clientSecret",
-        key: "clientSecret",
-        width: "120px",
-        sorter: (a, b) => a.clientSecret.localeCompare(b.clientSecret),
+        title: i18next.t("general:Doctor Name"),
+        dataIndex: "doctorName",
+        key: "doctorName",
+        width: "160px",
+        sorter: (a, b) => a.doctorName.localeCompare(b.doctorName),
       },
       {
-        title: i18next.t("general:Region"),
-        dataIndex: "region",
-        key: "region",
-        width: "90px",
-        sorter: (a, b) => a.region.localeCompare(b.region),
+        title: i18next.t("general:Specialist Alliance ID"),
+        dataIndex: "specialistAllianceID",
+        key: "specialistAllianceID",
+        width: "160px",
+        sorter: (a, b) =>
+          a.specialistAllianceID.localeCompare(b.specialistAllianceID),
       },
       {
-        title: i18next.t("caase:Caase URL"),
-        dataIndex: "caaseUrl",
-        key: "caaseUrl",
-        width: "150px",
-        sorter: true,
-        ...this.getColumnSearchProps("caaseUrl"),
-        render: (text, record, index) => {
-          return (
-            <a target="_blank" rel="noreferrer" href={text}>
-              {
-                Setting.getShortText(text)
-              }
-            </a>
-          );
-        },
-      },
-      {
-        title: i18next.t("general:State"),
-        dataIndex: "state",
-        key: "state",
-        width: "90px",
-        sorter: (a, b) => a.state.localeCompare(b.state),
+        title: i18next.t("general:Integrated Care Organization ID"),
+        dataIndex: "integratedCareOrganizationID",
+        key: "integratedCareOrganizationID",
+        width: "160px",
+        sorter: (a, b) =>
+          a.integratedCareOrganizationID.localeCompare(
+            b.integratedCareOrganizationID
+          ),
       },
       {
         title: i18next.t("general:Action"),
         dataIndex: "action",
         key: "action",
         width: "130px",
-        fixed: (Setting.isMobile()) ? "false" : "right",
+        fixed: Setting.isMobile() ? "false" : "right",
         render: (text, caase, index) => {
           return (
             <div>
               <Button
-                style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
-                onClick={() => this.props.history.push(`/caases/${caase.owner}/${caase.name}`)}
-              >{i18next.t("general:Edit")}
+                style={{
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                  marginRight: "10px",
+                }}
+                onClick={() =>
+                  this.props.history.push(
+                    `/caases/${caase.owner}/${caase.name}`
+                  )
+                }
+              >
+                {i18next.t("general:Edit")}
               </Button>
               <PopconfirmModal
                 disabled={caase.owner !== this.props.account.owner}
                 style={{marginBottom: "10px"}}
-                title={i18next.t("general:Sure to delete") + `: ${caase.name} ?`}
+                title={
+                  i18next.t("general:Sure to delete") + `: ${caase.name} ?`
+                }
                 onConfirm={() => this.deleteCaase(index)}
-              >
-              </PopconfirmModal>
+              ></PopconfirmModal>
             </div>
           );
         },
@@ -212,16 +275,32 @@ class CaaseListPage extends BaseListPage {
       total: this.state.pagination.total,
       showQuickJumper: true,
       showSizeChanger: true,
-      showTotal: () => i18next.t("general:{total} in total").replace("{total}", this.state.pagination.total),
+      showTotal: () =>
+        i18next
+          .t("general:{total} in total")
+          .replace("{total}", this.state.pagination.total),
     };
 
     return (
       <div>
-        <Table scroll={{x: "max-content"}} columns={columns} dataSource={caases} rowKey={(caase) => `${caase.owner}/${caase.name}`} size="middle" bordered pagination={paginationProps}
+        <Table
+          scroll={{x: "max-content"}}
+          columns={columns}
+          dataSource={caases}
+          rowKey={(caase) => `${caase.owner}/${caase.name}`}
+          size="middle"
+          bordered
+          pagination={paginationProps}
           title={() => (
             <div>
               {i18next.t("general:Caases")}&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" size="small" onClick={this.addCaase.bind(this)}>{i18next.t("general:Add")}</Button>
+              <Button
+                type="primary"
+                size="small"
+                onClick={this.addCaase.bind(this)}
+              >
+                {i18next.t("general:Add")}
+              </Button>
             </div>
           )}
           loading={this.state.loading}
@@ -232,38 +311,47 @@ class CaaseListPage extends BaseListPage {
   }
 
   fetch = (params = {}) => {
-    let field = params.searchedColumn, value = params.searchText;
-    const sortField = params.sortField, sortOrder = params.sortOrder;
+    let field = params.searchedColumn,
+      value = params.searchText;
+    const sortField = params.sortField,
+      sortOrder = params.sortOrder;
     if (params.type !== undefined && params.type !== null) {
       field = "type";
       value = params.type;
     }
     this.setState({loading: true});
-    CaaseBackend.getCaases(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
-      .then((res) => {
+    CaaseBackend.getCaases(
+      Setting.getRequestOrganization(this.props.account),
+      params.pagination.current,
+      params.pagination.pageSize,
+      field,
+      value,
+      sortField,
+      sortOrder
+    ).then((res) => {
+      this.setState({
+        loading: false,
+      });
+      if (res.status === "ok") {
         this.setState({
-          loading: false,
+          data: res.data,
+          pagination: {
+            ...params.pagination,
+            total: res.data2,
+          },
+          searchText: params.searchText,
+          searchedColumn: params.searchedColumn,
         });
-        if (res.status === "ok") {
+      } else {
+        if (Setting.isResponseDenied(res)) {
           this.setState({
-            data: res.data,
-            pagination: {
-              ...params.pagination,
-              total: res.data2,
-            },
-            searchText: params.searchText,
-            searchedColumn: params.searchedColumn,
+            isAuthorized: false,
           });
         } else {
-          if (Setting.isResponseDenied(res)) {
-            this.setState({
-              isAuthorized: false,
-            });
-          } else {
-            Setting.showMessage("error", res.msg);
-          }
+          Setting.showMessage("error", res.msg);
         }
-      });
+      }
+    });
   };
 }
 

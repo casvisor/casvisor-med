@@ -28,18 +28,29 @@ type Caase struct {
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Category string `xorm:"varchar(100)" json:"category"`
-	Type     string `xorm:"varchar(100)" json:"type"`
+	Symptoms      string `xorm:"varchar(100)" json:"symptoms"`
+	Diagnosis     string `xorm:"varchar(100)" json:"diagnostics"`
+	DiagnosisDate string `xorm:"varchar(100)" json:"diagnosticDate"`
+	Prescription  string `xorm:"varchar(100)" json:"prescription"`
+	FollowUp      string `xorm:"varchar(100)" json:"followUp"`
 
-	ClientId     string `xorm:"varchar(100)" json:"clientId"`
-	ClientSecret string `xorm:"varchar(100)" json:"clientSecret"`
-	Region       string `xorm:"varchar(100)" json:"region"`
-	Network      string `xorm:"varchar(100)" json:"network"`
-	Chain        string `xorm:"varchar(100)" json:"chain"`
-	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
+	// SymptomHash string `xorm:"varchar(100)" json:"symptomHash"`
+	// HospitalizationHash  string              `xorm:"varchar(100)" json:"hospitalizationHash"`
+	// LeaveDataHash string `xorm:"varchar(100)" json:"leaveDataHash"`
+	// OrdersHash    string `xorm:"varchar(100)" json:"ordersHash"`
+	Variation bool `xorm:"bool" json:"variation"`
+	// ClinicalOperations   []ClinicalOperation `xorm:"varchar(256)" json:"clinicalOperations"`
+	// NursingDatas         []NursingData       `xorm:"varchar(256)" json:"nursingData"`
+	// MedicalOrders        []MedicalOrder      `xorm:"varchar(256)" json:"medicalOrders"`
+	HISInterfaceInfo     string `xorm:"varchar(100)" json:"HISInterfaceInfo"`
+	PrimaryCarePhysician string `xorm:"varchar(100)" json:"primaryCarePhysician"`
+	Type                 string `xorm:"varchar(100)" json:"type"`
 
-	State    string `xorm:"varchar(100)" json:"state"`
-	CaaseUrl string `xorm:"varchar(200)" json:"caaseUrl"`
+	PatientName string `xorm:"varchar(100)" json:"patientName"`
+	DoctorName  string `xorm:"varchar(100)" json:"doctorName"`
+
+	SpecialistAllianceID         string `xorm:"varchar(100)" json:"specialistAllianceID"`
+	IntegratedCareOrganizationID string `xorm:"varchar(100)" json:"integratedCareOrganizationID"`
 }
 
 func GetCaaseCount(owner, field, value string) (int64, error) {
@@ -100,9 +111,9 @@ func GetMaskedCaase(caase *Caase, errs ...error) (*Caase, error) {
 		return nil, nil
 	}
 
-	if caase.ClientSecret != "" {
-		caase.ClientSecret = "***"
-	}
+	// if caase.ClientSecret != "" {
+	// 	caase.ClientSecret = "***"
+	// }
 	return caase, nil
 }
 
@@ -131,9 +142,9 @@ func UpdateCaase(id string, caase *Caase) (bool, error) {
 		return false, nil
 	}
 
-	if caase.ClientSecret == "***" {
-		caase.ClientSecret = p.ClientSecret
-	}
+	// if caase.ClientSecret == "***" {
+	// 	caase.ClientSecret = p.ClientSecret
+	// }
 
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(caase)
 	if err != nil {

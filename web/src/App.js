@@ -35,10 +35,6 @@ import MachineEditPage from "./MachineEditPage";
 import SessionListPage from "./SessionListPage";
 import RecordListPage from "./RecordListPage";
 import RecordEditPage from "./RecordEditPage";
-import CaseEditPage from "./CaseEditPage";
-import CaseListPage from "./CaseListPage.js"
-import DoctorEditPage from "./DoctorEditPage.js"
-import DoctorListPage from "./DoctorListPage.js"
 import ShortcutsPage from "./basic/ShortcutsPage";
 import AssetWorkbench from "./AssetWorkbench";
 import AccessPage from "./component/access/AccessPage";
