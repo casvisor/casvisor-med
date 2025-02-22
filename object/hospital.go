@@ -28,18 +28,7 @@ type Hospital struct {
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Category string `xorm:"varchar(100)" json:"category"`
-	Type     string `xorm:"varchar(100)" json:"type"`
-
-	ClientId     string `xorm:"varchar(100)" json:"clientId"`
-	ClientSecret string `xorm:"varchar(100)" json:"clientSecret"`
-	Region       string `xorm:"varchar(100)" json:"region"`
-	Network      string `xorm:"varchar(100)" json:"network"`
-	Chain        string `xorm:"varchar(100)" json:"chain"`
-	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
-
-	State       string `xorm:"varchar(100)" json:"state"`
-	HospitalUrl string `xorm:"varchar(200)" json:"hospitalUrl"`
+	Address    string `xorm:"varchar(100)" json:"address"`
 }
 
 func GetHospitalCount(owner, field, value string) (int64, error) {
@@ -100,9 +89,9 @@ func GetMaskedHospital(hospital *Hospital, errs ...error) (*Hospital, error) {
 		return nil, nil
 	}
 
-	if hospital.ClientSecret != "" {
-		hospital.ClientSecret = "***"
-	}
+	// if hospital.ClientSecret != "" {
+	// 	hospital.ClientSecret = "***"
+	// }
 	return hospital, nil
 }
 
@@ -131,9 +120,9 @@ func UpdateHospital(id string, hospital *Hospital) (bool, error) {
 		return false, nil
 	}
 
-	if hospital.ClientSecret == "***" {
-		hospital.ClientSecret = p.ClientSecret
-	}
+	// if hospital.ClientSecret == "***" {
+	// 	hospital.ClientSecret = p.ClientSecret
+	// }
 
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(hospital)
 	if err != nil {

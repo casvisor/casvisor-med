@@ -34,12 +34,7 @@ class HospitalListPage extends BaseListPage {
       createdTime: moment().format(),
       updatedTime: moment().format(),
       displayName: `New Hospital - ${Setting.getRandomName()}`,
-      category: "Public Cloud",
-      type: "Amazon Web Services",
-      clientId: "",
-      clientSecret: "",
-      region: "us-west",
-      state: "Active",
+      address: "",
     };
   }
 
@@ -122,60 +117,8 @@ class HospitalListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Category"),
-        dataIndex: "category",
-        key: "category",
-        width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
-      },
-      {
-        title: i18next.t("general:Type"),
-        dataIndex: "type",
-        key: "type",
-        width: "120px",
-        sorter: (a, b) => a.type.localeCompare(b.type),
-      },
-      {
-        title: i18next.t("general:Client ID"),
-        dataIndex: "clientId",
-        key: "clientId",
-        width: "120px",
-        sorter: (a, b) => a.clientId.localeCompare(b.clientId),
-      },
-      {
-        title: i18next.t("general:Client secret"),
-        dataIndex: "clientSecret",
-        key: "clientSecret",
-        width: "120px",
-        sorter: (a, b) => a.clientSecret.localeCompare(b.clientSecret),
-      },
-      {
-        title: i18next.t("general:Region"),
-        dataIndex: "region",
-        key: "region",
-        width: "90px",
-        sorter: (a, b) => a.region.localeCompare(b.region),
-      },
-      {
-        title: i18next.t("hospital:Hospital URL"),
-        dataIndex: "hospitalUrl",
-        key: "hospitalUrl",
-        width: "150px",
-        sorter: true,
-        ...this.getColumnSearchProps("hospitalUrl"),
-        render: (text, record, index) => {
-          return (
-            <a target="_blank" rel="noreferrer" href={text}>
-              {
-                Setting.getShortText(text)
-              }
-            </a>
-          );
-        },
-      },
-      {
-        title: i18next.t("general:State"),
-        dataIndex: "state",
+        title: i18next.t("general:Address"),
+        dataIndex: "address",
         key: "state",
         width: "90px",
         sorter: (a, b) => a.state.localeCompare(b.state),

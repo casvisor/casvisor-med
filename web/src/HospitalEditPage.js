@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import React from "react";
-import {Button, Card, Col, Input, Row, Select} from "antd";
-import {LinkOutlined} from "@ant-design/icons";
+import {Button, Card, Col, Input, Row} from "antd";
+// import {LinkOutlined} from "@ant-design/icons";
 import * as HospitalBackend from "./backend/HospitalBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
@@ -95,116 +95,14 @@ class HospitalEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px"}}>
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("hospital:Category"), i18next.t("hospital:Category - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Select virtual={false} style={{width: "100%"}} value={this.state.hospital.category} onChange={value => {
-              this.updateHospitalField("category", value);
-              if (value === "Public Cloud") {
-                this.updateHospitalField("type", "Amazon Web Services");
-              } else if (value === "Private Cloud") {
-                this.updateHospitalField("type", "KVM");
-              } else if (value === "Blockchain") {
-                this.updateHospitalField("type", "Hyperledger Fabric");
-              }
-            }}
-            options={[
-              {value: "Public Cloud", label: "Public Cloud"},
-              {value: "Private Cloud", label: "Private Cloud"},
-              {value: "Blockchain", label: "Blockchain"},
-            ].map(item => Setting.getOption(item.label, item.value))} />
-          </Col>
-        </Row>
         <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Client ID"), i18next.t("general:Client ID - Tooltip"))} :
+            {Setting.getLabel(i18next.t("general:Address"), i18next.t("general:Address - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.hospital.clientId} onChange={e => {
-              this.updateHospitalField("clientId", e.target.value);
+            <Input value={this.state.hospital.address} onChange={e => {
+              this.updateHospitalField("address", e.target.value);
             }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Client secret"), i18next.t("general:Client secret - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input value={this.state.hospital.clientSecret} onChange={e => {
-              this.updateHospitalField("clientSecret", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Region"), i18next.t("general:Region - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input value={this.state.hospital.region} onChange={e => {
-              this.updateHospitalField("region", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        {
-          this.state.hospital.category !== "Blockchain" ? null : (
-            <React.Fragment>
-              <Row style={{marginTop: "20px"}} >
-                <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-                  {Setting.getLabel(i18next.t("general:Network"), i18next.t("general:Network - Tooltip"))} :
-                </Col>
-                <Col span={22} >
-                  <Input value={this.state.hospital.network} onChange={e => {
-                    this.updateHospitalField("network", e.target.value);
-                  }} />
-                </Col>
-              </Row>
-              <Row style={{marginTop: "20px"}} >
-                <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-                  {Setting.getLabel(i18next.t("general:Chain"), i18next.t("general:Chain - Tooltip"))} :
-                </Col>
-                <Col span={22} >
-                  <Input value={this.state.hospital.chain} onChange={e => {
-                    this.updateHospitalField("chain", e.target.value);
-                  }} />
-                </Col>
-              </Row>
-            </React.Fragment>
-          )
-        }
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("hospital:Browser URL"), i18next.t("hospital:Browser URL - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input prefix={<LinkOutlined />} value={this.state.hospital.browserUrl} onChange={e => {
-              this.updateHospitalField("browserUrl", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("hospital:Hospital URL"), i18next.t("hospital:Hospital URL - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input prefix={<LinkOutlined />} value={this.state.hospital.hospitalUrl} onChange={e => {
-              this.updateHospitalField("hospitalUrl", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}}>
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("hospital:State"), i18next.t("hospital:State - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Select virtual={false} style={{width: "100%"}} value={this.state.hospital.state} onChange={value => {
-              this.updateHospitalField("state", value);
-            }}
-            options={[
-              {value: "Active", label: "Active"},
-              {value: "Inactive", label: "Inactive"},
-            ].map(item => Setting.getOption(item.label, item.value))} />
           </Col>
         </Row>
       </Card>
