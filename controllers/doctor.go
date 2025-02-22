@@ -40,7 +40,7 @@ func (c *ApiController) GetDoctors() {
 	sortOrder := c.Input().Get("sortOrder")
 
 	if limit == "" || page == "" {
-		doctors, err := object.GetDoctors()
+		doctors, err := object.GetDoctors(owner)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return

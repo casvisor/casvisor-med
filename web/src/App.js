@@ -37,6 +37,8 @@ import RecordListPage from "./RecordListPage";
 import RecordEditPage from "./RecordEditPage";
 import CaseEditPage from "./CaseEditPage";
 import CaseListPage from "./CaseListPage.js"
+import DoctorEditPage from "./DoctorEditPage.js"
+import DoctorListPage from "./DoctorListPage.js"
 import ShortcutsPage from "./basic/ShortcutsPage";
 import AssetWorkbench from "./AssetWorkbench";
 import AccessPage from "./component/access/AccessPage";
@@ -206,6 +208,7 @@ class App extends Component {
 
     res.push(Setting.getItem(<Link to="/">{i18next.t("general:Home")}</Link>, ""));
     res.push(Setting.getItem(<Link to="/cases">{i18next.t("general:Cases")}</Link>, "cases"));
+    res.push(Setting.getItem(<Link to="/doctors">{i18next.t("general:Doctors")}</Link>, "doctors"));
     res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>, "assets"));
     res.push(Setting.getItem(<Link to="/providers">{i18next.t("general:Providers")}</Link>, "providers"));
     res.push(Setting.getItem(<Link to="/machines">{i18next.t("general:Machines")}</Link>, "machines"));
@@ -242,8 +245,10 @@ class App extends Component {
         <Route exact path="/callback" component={AuthCallback} />
         <Route exact path="/signin" render={(props) => this.renderHomeIfSignedIn(<SigninPage {...props} />)} />
         <Route exact path="/" render={(props) => this.renderSigninIfNotSignedIn(<ShortcutsPage account={this.state.account} {...props} />)} />
-        <Route exact path="/cases" render={(props) => this.renderSigninIfNotSignedIn(<AssetListPage account={this.state.account} {...props} />)} />
-        <Route exact path="/cases/:organizationName/:caseName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/cases" render={(props) => this.renderSigninIfNotSignedIn(<CaseListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/cases/:organizationName/:caseName" render={(props) => this.renderSigninIfNotSignedIn(<CaseEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/doctors" render={(props) => this.renderSigninIfNotSignedIn(<DoctorListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/doctors/:organizationName/:doctorName" render={(props) => this.renderSigninIfNotSignedIn(<DoctorEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets" render={(props) => this.renderSigninIfNotSignedIn(<AssetListPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets/:organizationName/:assetName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/providers" render={(props) => this.renderSigninIfNotSignedIn(<ProviderListPage account={this.state.account} {...props} />)} />

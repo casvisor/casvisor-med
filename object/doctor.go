@@ -14,20 +14,23 @@
 
 package object
 
+import (
+	"github.com/casvisor/casvisor/util"
+	"xorm.io/core"
+)
+
 type Doctor struct {
-	DoctorID    string `xorm:"varchar(100) pk" json:"doctorID"`
-	Department  string `xorm:"varchar(100)" json:"department"`
-	Name        string `xorm:"varchar(100)" json:"name"`
-	Gender      string `xorm:"varchar(100)" json:"gender"`
-	AccessLevel string `xorm:"varchar(100)" json:"accessLevel"`
-	CanModify   bool   `xorm:"bool" json:"canModify"`
-	CanDelete   bool   `xorm:"bool" json:"canDelete"`
-
-	Hospital Hospital `xorm:"varchar(100) index" json:"hospital"`
-
+	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
+	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
+
+	Department  string `xorm:"varchar(100)" json:"department"`
+	Gender      string `xorm:"varchar(100)" json:"gender"`
+	AccessLevel string `xorm:"varchar(100)" json:"accessLevel"`
+
+	HospitalName string `xorm:"varchar(100)" json:"hospitalName"`
 }
 
 func GetDoctorCount(owner, field, value string) (int64, error) {
@@ -35,9 +38,9 @@ func GetDoctorCount(owner, field, value string) (int64, error) {
 	return session.Count(&Doctor{})
 }
 
-func GetDoctors() ([]*Doctor, error) {
+func GetDoctors(owner string) ([]*Doctor, error) {
 	doctors := []*Doctor{}
-	err := adapter.engine.Desc("created_time").Find(&doctors, &Doctor{})
+	err := adapter.engine.Desc("created_time").Find(&doctors, &Doctor{Owner: owner})
 	if err != nil {
 		return doctors, err
 	}
@@ -54,49 +57,57 @@ func GetPaginationDoctor(owner string, offset, limit int, field, value, sortFiel
 
 	return doctors, nil
 }
-
-func GetDoctor(DoctorID string) (*Doctor, error) {
-	if DoctorID == "" {
+func getDoctor(owner, name string) (*Doctor, error) {
+	if owner == "" || name == "" {
 		return nil, nil
 	}
-	docter := Doctor{DoctorID: DoctorID}
-	existed, err := adapter.engine.Get(&docter)
+	doctor := Doctor{Owner: owner, Name: name}
+	existed, err := adapter.engine.Get(&doctor)
 	if err != nil {
-		return &docter, err
+		return &doctor, err
 	}
 	if existed {
-		return &docter, nil
+		return &doctor, nil
 	} else {
 		return nil, nil
 	}
 }
 
-func UpdateDoctor(DoctorID string, docter *Doctor) (bool, error) {
-	p, err := GetDoctor(DoctorID)
+func GetDoctor(id string) (*Doctor, error) {
+	owner, name := util.GetOwnerAndNameFromId(id)
+	return getDoctor(owner, name)
+}
+
+func UpdateDoctor(id string, doctor *Doctor) (bool, error) {
+	owner, name := util.GetOwnerAndNameFromId(id)
+	p, err := getDoctor(owner, name)
 	if err != nil {
 		return false, err
 	} else if p == nil {
 		return false, nil
 	}
-	affected, err := adapter.engine.ID(DoctorID).AllCols().Update(docter)
+
+	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(doctor)
 	if err != nil {
 		return false, err
 	}
 	return affected != 0, nil
 }
 
-func AddDoctor(docter *Doctor) (bool, error) {
-	affected, err := adapter.engine.Insert(docter)
+func AddDoctor(doctor *Doctor) (bool, error) {
+	affected, err := adapter.engine.Insert(doctor)
+	if err != nil {
+		return false, err
+	}
+
+	return affected!=0, nil
+}
+
+func DeleteDoctor(doctor *Doctor) (bool, error) {
+	affected, err := adapter.engine.ID(core.PK{doctor.Owner, doctor.Name}).Delete(&Doctor{})
 	if err != nil {
 		return false, err
 	}
 	return affected != 0, nil
 }
 
-func DeleteDoctor(docter *Doctor) (bool, error) {
-	affected, err := adapter.engine.Delete(docter)
-	if err != nil {
-		return false, err
-	}
-	return affected != 0, nil
-}
