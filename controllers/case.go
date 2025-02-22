@@ -28,7 +28,7 @@ import (
 // @Description get all cases
 // @Param   pageSize     query    string  true        "The size of each page"
 // @Param   p     query    string  true        "The number of the page"
-// @Success 200 {object} object.DiseaseCase The Response object
+// @Success 200 {object} object.Case The Response object
 // @router /get-cases [get]
 func (c *ApiController) GetCases() {
 	owner := c.Input().Get("owner")
@@ -40,7 +40,7 @@ func (c *ApiController) GetCases() {
 	sortOrder := c.Input().Get("sortOrder")
 
 	if limit == "" || page == "" {
-		cases, err := object.GetDiseaseCases()
+		cases, err := object.GetCases(owner)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
@@ -48,13 +48,13 @@ func (c *ApiController) GetCases() {
 		c.ResponseOk(cases)
 	} else {
 		limit := util.ParseInt(limit)
-		count, err := object.GetDiseaseCaseCount(owner, field, value)
+		count, err := object.GetCaseCount(owner, field, value)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
 		paginator := pagination.SetPaginator(c.Ctx, limit, count)
-		cases, err := object.GetPaginationDiseaseCase(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
+		cases, err := object.GetPaginationCase(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
@@ -68,12 +68,12 @@ func (c *ApiController) GetCases() {
 // @Tag Case API
 // @Description get case
 // @Param   id     query    string  true        "The id of the case"
-// @Success 200 {object} object.DiseaseCase The Response object
+// @Success 200 {object} object.Case The Response object
 // @router /get-case [get]
 func (c *ApiController) GetCase() {
 	id := c.Input().Get("id")
 
-	diseaseCase, err := object.GetDiseaseCase(id)
+	diseaseCase, err := object.GetCase(id)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
@@ -87,20 +87,20 @@ func (c *ApiController) GetCase() {
 // @Tag Case API
 // @Description update case
 // @Param   id     query    string  true        "The id of the case"
-// @Param   body    body   object.DiseaseCase  true        "The details of the case"
+// @Param   body    body   object.Case  true        "The details of the case"
 // @Success 200 {object} controllers.Response The Response object
 // @router /update-case [post]
 func (c *ApiController) UpdateCase() {
 	id := c.Input().Get("id")
 
-	var diseaseCase object.DiseaseCase
+	var diseaseCase object.Case
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &diseaseCase)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
 	}
 
-	c.Data["json"] = wrapActionResponse(object.UpdateDiseaseCase(id, &diseaseCase))
+	c.Data["json"] = wrapActionResponse(object.UpdateCase(id, &diseaseCase))
 	c.ServeJSON()
 }
 
@@ -108,18 +108,18 @@ func (c *ApiController) UpdateCase() {
 // @Title AddCase
 // @Tag Case API
 // @Description add a case
-// @Param   body    body   object.DiseaseCase  true        "The details of the case"
+// @Param   body    body   object.Case  true        "The details of the case"
 // @Success 200 {object} controllers.Response The Response object
 // @router /add-case [post]
 func (c *ApiController) AddCase() {
-	var diseaseCase object.DiseaseCase
+	var diseaseCase object.Case
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &diseaseCase)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
 	}
 
-	c.Data["json"] = wrapActionResponse(object.AddDiseaseCase(&diseaseCase))
+	c.Data["json"] = wrapActionResponse(object.AddCase(&diseaseCase))
 	c.ServeJSON()
 }
 
@@ -127,17 +127,17 @@ func (c *ApiController) AddCase() {
 // @Title DeleteCase
 // @Tag Case API
 // @Description delete a case
-// @Param   body    body   object.DiseaseCase  true        "The details of the case"
+// @Param   body    body   object.Case  true        "The details of the case"
 // @Success 200 {object} controllers.Response The Response object
 // @router /delete-case [post]
 func (c *ApiController) DeleteCase() {
-	var diseaseCase object.DiseaseCase
+	var diseaseCase object.Case
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &diseaseCase)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
 	}
 
-	c.Data["json"] = wrapActionResponse(object.DeleteDiseaseCase(&diseaseCase))
+	c.Data["json"] = wrapActionResponse(object.DeleteCase(&diseaseCase))
 	c.ServeJSON()
 }

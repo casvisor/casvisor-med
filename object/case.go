@@ -14,18 +14,28 @@
 
 package object
 
-type DiseaseCase struct {
-	CaseID        string `xorm:"varchar(100) pk" json:"caseID"`
+import (
+	"github.com/casvisor/casvisor/util"
+	"xorm.io/core"
+)
+
+type Case struct {
+	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
+	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
+	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
+	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
+	DisplayName string `xorm:"varchar(100)" json:"displayName"`
+
 	Symptoms      string `xorm:"varchar(100)" json:"symptoms"`
 	Diagnosis     string `xorm:"varchar(100)" json:"diagnostics"`
 	DiagnosisDate string `xorm:"varchar(100)" json:"diagnosticDate"`
 	Prescription  string `xorm:"varchar(100)" json:"prescription"`
 	FollowUp      string `xorm:"varchar(100)" json:"followUp"`
 
-	SymptomHash string `xorm:"varchar(100)" json:"symptomHash"`
+	// SymptomHash string `xorm:"varchar(100)" json:"symptomHash"`
 	// HospitalizationHash  string              `xorm:"varchar(100)" json:"hospitalizationHash"`
-	LeaveDataHash string `xorm:"varchar(100)" json:"leaveDataHash"`
-	OrdersHash    string `xorm:"varchar(100)" json:"ordersHash"`
+	// LeaveDataHash string `xorm:"varchar(100)" json:"leaveDataHash"`
+	// OrdersHash    string `xorm:"varchar(100)" json:"ordersHash"`
 	Variation     bool   `xorm:"bool" json:"variation"`
 	// ClinicalOperations   []ClinicalOperation `xorm:"varchar(256)" json:"clinicalOperations"`
 	// NursingDatas         []NursingData       `xorm:"varchar(256)" json:"nursingData"`
@@ -34,33 +44,29 @@ type DiseaseCase struct {
 	PrimaryCarePhysician string `xorm:"varchar(100)" json:"primaryCarePhysician"`
 	Type                 string `xorm:"varchar(100)" json:"type"`
 
-	Patient Patient `xorm:"varchar(100) index" json:"patient"`
-	Doctor  Doctor  `xorm:"varchar(100) index" json:"doctor"`
+	PatientName string `xorm:"varchar(100)" json:"patientName"`
+	DoctorName  string `xorm:"varchar(100)" json:"doctorName"`
 
 	SpecialistAllianceID         string `xorm:"varchar(100)" json:"specialistAllianceID"`
 	IntegratedCareOrganizationID string `xorm:"varchar(100)" json:"integratedCareOrganizationID"`
-
-	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
-	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
-	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 }
 
-func GetDiseaseCaseCount(owner, field, value string) (int64, error) {
+func GetCaseCount(owner, field, value string) (int64, error) {
 	session := GetSession(owner, -1, -1, field, value, "", "")
-	return session.Count(&DiseaseCase{})
+	return session.Count(&Case{})
 }
 
-func GetDiseaseCases() ([]*DiseaseCase, error) {
-	diseaseCases := []*DiseaseCase{}
-	err := adapter.engine.Desc("created_time").Find(&diseaseCases, &DiseaseCase{})
+func GetCases(owner string) ([]*Case, error) {
+	diseaseCases := []*Case{}
+	err := adapter.engine.Desc("created_time").Find(&diseaseCases, &Case{Owner: owner})
 	if err != nil {
 		return diseaseCases, err
 	}
 	return diseaseCases, nil
 }
 
-func GetPaginationDiseaseCase(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*DiseaseCase, error) {
-	diseaseCases := []*DiseaseCase{}
+func GetPaginationCase(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Case, error) {
+	diseaseCases := []*Case{}
 	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)
 	err := session.Find(&diseaseCases)
 	if err != nil {
@@ -70,11 +76,11 @@ func GetPaginationDiseaseCase(owner string, offset, limit int, field, value, sor
 	return diseaseCases, nil
 }
 
-func GetDiseaseCase(caseID string) (*DiseaseCase, error) {
-	if caseID == "" {
+func getCase(owner, name string) (*Case, error) {
+	if owner == "" || name == "" {
 		return nil, nil
 	}
-	diseaseCase := DiseaseCase{CaseID: caseID}
+	diseaseCase := Case{Owner: owner, Name: name}
 	existed, err := adapter.engine.Get(&diseaseCase)
 	if err != nil {
 		return &diseaseCase, err
@@ -86,32 +92,42 @@ func GetDiseaseCase(caseID string) (*DiseaseCase, error) {
 	}
 }
 
-func UpdateDiseaseCase(caseID string, diseaseCase *DiseaseCase) (bool, error) {
-	p, err := GetDiseaseCase(caseID)
+func GetCase(id string) (*Case, error) {
+	owner, name := util.GetOwnerAndNameFromId(id)
+	return getCase(owner, name)
+}
+
+func UpdateCase(id string, diseaseCase *Case) (bool, error) {
+	owner, name := util.GetOwnerAndNameFromId(id)
+	p, err := getCase(owner, name)
 	if err != nil {
 		return false, err
 	} else if p == nil {
 		return false, nil
 	}
-	affected, err := adapter.engine.ID(caseID).AllCols().Update(diseaseCase)
+
+	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(diseaseCase)
 	if err != nil {
 		return false, err
 	}
+
 	return affected != 0, nil
 }
 
-func AddDiseaseCase(diseaseCase *DiseaseCase) (bool, error) {
+func AddCase(diseaseCase *Case) (bool, error) {
 	affected, err := adapter.engine.Insert(diseaseCase)
 	if err != nil {
 		return false, err
 	}
+
 	return affected != 0, nil
 }
 
-func DeleteDiseaseCase(diseaseCase *DiseaseCase) (bool, error) {
-	affected, err := adapter.engine.Delete(diseaseCase)
+func DeleteCase(diseaseCase *Case) (bool, error) {
+	affected, err := adapter.engine.ID(core.PK{diseaseCase.Owner, diseaseCase.Name}).Delete(&Case{})
 	if err != nil {
 		return false, err
 	}
+
 	return affected != 0, nil
 }
