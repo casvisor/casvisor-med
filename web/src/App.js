@@ -215,8 +215,6 @@ class App extends Component {
     }
 
     res.push(Setting.getItem(<Link to="/">{i18next.t("general:Home")}</Link>, ""));
-    res.push(Setting.getItem(<Link to="/cases">{i18next.t("general:Cases")}</Link>, "cases"));
-    res.push(Setting.getItem(<Link to="/doctors">{i18next.t("general:Doctors")}</Link>, "doctors"));
     res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>, "assets"));
     res.push(Setting.getItem(<Link to="/providers">{i18next.t("general:Providers")}</Link>, "providers"));
     res.push(Setting.getItem(<Link to="/caases">{i18next.t("general:Caases")}</Link>, "caases"));

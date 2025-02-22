@@ -122,63 +122,39 @@ class PatientListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Category"),
-        dataIndex: "category",
-        key: "category",
-        width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
+        title: i18next.t("general:Gender"),
+        dataIndex: "gender",
+        key: "gender",
+        width: "100px",
+        sorter: (a, b) => a.gender.localeCompare(b.gender),
       },
       {
-        title: i18next.t("general:Type"),
-        dataIndex: "type",
-        key: "type",
-        width: "120px",
-        sorter: (a, b) => a.type.localeCompare(b.type),
+        title: i18next.t("general:Address"),
+        dataIndex: "address",
+        key: "address",
+        width: "200px",
+        sorter: (a, b) => a.address.localeCompare(b.address),
       },
       {
-        title: i18next.t("general:Client ID"),
-        dataIndex: "clientId",
-        key: "clientId",
-        width: "120px",
-        sorter: (a, b) => a.clientId.localeCompare(b.clientId),
+        title: i18next.t("general:Email"),
+        dataIndex: "email",
+        key: "email",
+        width: "200px",
+        sorter: (a, b) => a.email.localeCompare(b.email),
       },
       {
-        title: i18next.t("general:Client secret"),
-        dataIndex: "clientSecret",
-        key: "clientSecret",
-        width: "120px",
-        sorter: (a, b) => a.clientSecret.localeCompare(b.clientSecret),
+        title: i18next.t("general:Blood Type"),
+        dataIndex: "bloodType",
+        key: "bloodType",
+        width: "100px",
+        sorter: (a, b) => a.bloodType.localeCompare(b.bloodType),
       },
       {
-        title: i18next.t("general:Region"),
-        dataIndex: "region",
-        key: "region",
-        width: "90px",
-        sorter: (a, b) => a.region.localeCompare(b.region),
-      },
-      {
-        title: i18next.t("patient:Patient URL"),
-        dataIndex: "patientUrl",
-        key: "patientUrl",
-        width: "150px",
-        sorter: true,
-        ...this.getColumnSearchProps("patientUrl"),
-        render: (text, record, index) => {
-          return (
-            <a target="_blank" rel="noreferrer" href={text}>
-              {
-                Setting.getShortText(text)
-              }
-            </a>
-          );
-        },
-      },
-      {
-        title: i18next.t("general:State"),
-        dataIndex: "state",
-        key: "state",
-        width: "90px",
-        sorter: (a, b) => a.state.localeCompare(b.state),
+        title: i18next.t("general:Allergies"),
+        dataIndex: "allergies",
+        key: "allergies",
+        width: "200px",
+        sorter: (a, b) => a.allergies.localeCompare(b.allergies),
       },
       {
         title: i18next.t("general:Action"),
