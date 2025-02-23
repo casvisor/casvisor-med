@@ -28,18 +28,12 @@ type Learning struct {
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Category string `xorm:"varchar(100)" json:"category"`
-	Type     string `xorm:"varchar(100)" json:"type"`
-
-	ClientId     string `xorm:"varchar(100)" json:"clientId"`
-	ClientSecret string `xorm:"varchar(100)" json:"clientSecret"`
-	Region       string `xorm:"varchar(100)" json:"region"`
-	Network      string `xorm:"varchar(100)" json:"network"`
-	Chain        string `xorm:"varchar(100)" json:"chain"`
-	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
-
-	State       string `xorm:"varchar(100)" json:"state"`
-	LearningUrl string `xorm:"varchar(200)" json:"learningUrl"`
+	Discription    string `xorm:"varchar(100)" json:"discription"`
+	Epoch          string `xorm:"varchar(100)" json:"epoch"`
+	ModelPath      string `xorm:"varchar(100)" json:"modelPath"`
+	HospitalName       string `xorm:"varchar(100)" json:"hospitalName"`
+	LocalBatchSize string `xorm:"varchar(100)" json:"localBatchSize"`
+	LocalEpochs    string `xorm:"varchar(100)" json:"localEpochs"`
 }
 
 func GetLearningCount(owner, field, value string) (int64, error) {
@@ -100,9 +94,9 @@ func GetMaskedLearning(learning *Learning, errs ...error) (*Learning, error) {
 		return nil, nil
 	}
 
-	if learning.ClientSecret != "" {
-		learning.ClientSecret = "***"
-	}
+	// if learning.ClientSecret != "" {
+	// 	learning.ClientSecret = "***"
+	// }
 	return learning, nil
 }
 
@@ -131,9 +125,9 @@ func UpdateLearning(id string, learning *Learning) (bool, error) {
 		return false, nil
 	}
 
-	if learning.ClientSecret == "***" {
-		learning.ClientSecret = p.ClientSecret
-	}
+	// if learning.ClientSecret == "***" {
+	// 	learning.ClientSecret = p.ClientSecret
+	// }
 
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(learning)
 	if err != nil {

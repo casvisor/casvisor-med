@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import React from "react";
-import {Button, Card, Col, Input, Row, Select} from "antd";
-import {LinkOutlined} from "@ant-design/icons";
+import {Button, Card, Col, Input, Row} from "antd";
+// import {LinkOutlined} from "@ant-design/icons";
 import * as LearningBackend from "./backend/LearningBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
@@ -97,114 +97,62 @@ class LearningEditPage extends React.Component {
         </Row>
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("learning:Category"), i18next.t("learning:Category - Tooltip"))} :
+            {Setting.getLabel(i18next.t("learning:Discription"), i18next.t("learning:Discription - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Select virtual={false} style={{width: "100%"}} value={this.state.learning.category} onChange={value => {
-              this.updateLearningField("category", value);
-              if (value === "Public Cloud") {
-                this.updateLearningField("type", "Amazon Web Services");
-              } else if (value === "Private Cloud") {
-                this.updateLearningField("type", "KVM");
-              } else if (value === "Blockchain") {
-                this.updateLearningField("type", "Hyperledger Fabric");
-              }
-            }}
-            options={[
-              {value: "Public Cloud", label: "Public Cloud"},
-              {value: "Private Cloud", label: "Private Cloud"},
-              {value: "Blockchain", label: "Blockchain"},
-            ].map(item => Setting.getOption(item.label, item.value))} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Client ID"), i18next.t("general:Client ID - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input value={this.state.learning.clientId} onChange={e => {
-              this.updateLearningField("clientId", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Client secret"), i18next.t("general:Client secret - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input value={this.state.learning.clientSecret} onChange={e => {
-              this.updateLearningField("clientSecret", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Region"), i18next.t("general:Region - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input value={this.state.learning.region} onChange={e => {
-              this.updateLearningField("region", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        {
-          this.state.learning.category !== "Blockchain" ? null : (
-            <React.Fragment>
-              <Row style={{marginTop: "20px"}} >
-                <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-                  {Setting.getLabel(i18next.t("general:Network"), i18next.t("general:Network - Tooltip"))} :
-                </Col>
-                <Col span={22} >
-                  <Input value={this.state.learning.network} onChange={e => {
-                    this.updateLearningField("network", e.target.value);
-                  }} />
-                </Col>
-              </Row>
-              <Row style={{marginTop: "20px"}} >
-                <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-                  {Setting.getLabel(i18next.t("general:Chain"), i18next.t("general:Chain - Tooltip"))} :
-                </Col>
-                <Col span={22} >
-                  <Input value={this.state.learning.chain} onChange={e => {
-                    this.updateLearningField("chain", e.target.value);
-                  }} />
-                </Col>
-              </Row>
-            </React.Fragment>
-          )
-        }
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("learning:Browser URL"), i18next.t("learning:Browser URL - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input prefix={<LinkOutlined />} value={this.state.learning.browserUrl} onChange={e => {
-              this.updateLearningField("browserUrl", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("learning:Learning URL"), i18next.t("learning:Learning URL - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input prefix={<LinkOutlined />} value={this.state.learning.learningUrl} onChange={e => {
-              this.updateLearningField("learningUrl", e.target.value);
+            <Input value={this.state.learning.discription} onChange={e => {
+              this.updateLearningField("discription", e.target.value);
             }} />
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("learning:State"), i18next.t("learning:State - Tooltip"))} :
+            {Setting.getLabel(i18next.t("learning:Epoch"), i18next.t("learning:Epoch - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Select virtual={false} style={{width: "100%"}} value={this.state.learning.state} onChange={value => {
-              this.updateLearningField("state", value);
-            }}
-            options={[
-              {value: "Active", label: "Active"},
-              {value: "Inactive", label: "Inactive"},
-            ].map(item => Setting.getOption(item.label, item.value))} />
+            <Input value={this.state.learning.epoch} onChange={e => {
+              this.updateLearningField("epoch", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("learning:ModelPath"), i18next.t("learning:ModelPath - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.learning.modelPath} onChange={e => {
+              this.updateLearningField("modelPath", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("learning:hospitalName"), i18next.t("learning:Hospital Name - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.learning.hospitalName} onChange={e => {
+              this.updateLearningField("hospitalName", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("learning:LocalBatchSize"), i18next.t("learning:LocalBatchSize - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.learning.localBatchSize} onChange={e => {
+              this.updateLearningField("localBatchSize", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("learning:LocalEpochs"), i18next.t("learning:LocalEpochs - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.learning.localEpochs} onChange={e => {
+              this.updateLearningField("localEpochs", e.target.value);
+            }} />
           </Col>
         </Row>
       </Card>

@@ -34,12 +34,12 @@ class LearningListPage extends BaseListPage {
       createdTime: moment().format(),
       updatedTime: moment().format(),
       displayName: `New Learning - ${Setting.getRandomName()}`,
-      category: "Public Cloud",
-      type: "Amazon Web Services",
-      clientId: "",
-      clientSecret: "",
-      region: "us-west",
-      state: "Active",
+      discription: "Model description",
+      epoch: "0",
+      modelPath: "/path/to/model",
+      hospitalName: "Unknown",
+      localBatchSize: "0",
+      localEpochs: "0",
     };
   }
 
@@ -122,63 +122,46 @@ class LearningListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Category"),
-        dataIndex: "category",
-        key: "category",
-        width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
+        title: i18next.t("general:Description"),
+        dataIndex: "discription",
+        key: "discription",
+        width: "200px",
+        sorter: (a, b) => a.discription.localeCompare(b.discription),
       },
       {
-        title: i18next.t("general:Type"),
-        dataIndex: "type",
-        key: "type",
-        width: "120px",
-        sorter: (a, b) => a.type.localeCompare(b.type),
+        title: i18next.t("general:Epoch"),
+        dataIndex: "epoch",
+        key: "epoch",
+        width: "80px",
+        sorter: (a, b) => a.epoch - b.epoch,
       },
       {
-        title: i18next.t("general:Client ID"),
-        dataIndex: "clientId",
-        key: "clientId",
-        width: "120px",
-        sorter: (a, b) => a.clientId.localeCompare(b.clientId),
+        title: i18next.t("general:Model path"),
+        dataIndex: "modelPath",
+        key: "modelPath",
+        width: "200px",
+        sorter: (a, b) => a.modelPath.localeCompare(b.modelPath),
       },
       {
-        title: i18next.t("general:Client secret"),
-        dataIndex: "clientSecret",
-        key: "clientSecret",
-        width: "120px",
-        sorter: (a, b) => a.clientSecret.localeCompare(b.clientSecret),
-      },
-      {
-        title: i18next.t("general:Region"),
-        dataIndex: "region",
-        key: "region",
-        width: "90px",
-        sorter: (a, b) => a.region.localeCompare(b.region),
-      },
-      {
-        title: i18next.t("learning:Learning URL"),
-        dataIndex: "learningUrl",
-        key: "learningUrl",
+        title: i18next.t("general:Hospital Name"),
+        dataIndex: "hospitalName",
+        key: "hospitalName",
         width: "150px",
-        sorter: true,
-        ...this.getColumnSearchProps("learningUrl"),
-        render: (text, record, index) => {
-          return (
-            <a target="_blank" rel="noreferrer" href={text}>
-              {
-                Setting.getShortText(text)
-              }
-            </a>
-          );
-        },
+        sorter: (a, b) => a.hospitalName.localeCompare(b.hospitalName),
       },
       {
-        title: i18next.t("general:State"),
-        dataIndex: "state",
-        key: "state",
-        width: "90px",
-        sorter: (a, b) => a.state.localeCompare(b.state),
+        title: i18next.t("general:Local batch size"),
+        dataIndex: "localBatchSize",
+        key: "localBatchSize",
+        width: "150px",
+        sorter: (a, b) => a.localBatchSize - b.localBatchSize,
+      },
+      {
+        title: i18next.t("general:Local epochs"),
+        dataIndex: "localEpochs",
+        key: "localEpochs",
+        width: "150px",
+        sorter: (a, b) => a.localEpochs - b.localEpochs,
       },
       {
         title: i18next.t("general:Action"),
