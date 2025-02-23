@@ -50,6 +50,7 @@ import LearningListPage from "./LearningListPage";
 import LearningEditPage from "./LearningEditPage";
 import PatientListPage from "./PatientListPage";
 import PatientEditPage from "./PatientEditPage";
+import AuditPage from "./AuditPage";
 
 const {Header, Footer, Content} = Layout;
 
@@ -223,6 +224,7 @@ class App extends Component {
     res.push(Setting.getItem(<Link to="/hospitals">{i18next.t("general:Hospitals")}</Link>, "hospitals"));
     res.push(Setting.getItem(<Link to="/learnings">{i18next.t("general:Learnings")}</Link>, "learnings"));
     res.push(Setting.getItem(<Link to="/patients">{i18next.t("general:Patients")}</Link>, "patients"));
+    res.push(Setting.getItem(<Link to="/audit">{i18next.t("general:Audit")}</Link>, "audit"));
     res.push(Setting.getItem(<Link to="/machines">{i18next.t("general:Machines")}</Link>, "machines"));
     res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>, "sessions"));
     res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>, "records"));
@@ -280,6 +282,7 @@ class App extends Component {
         <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/access/:owner/:name" render={(props) => this.renderSigninIfNotSignedIn(<AccessPage account={this.state.account} {...props} />)} />
         <Route exact path="/workbench" render={(props) => this.renderSigninIfNotSignedIn(<AssetWorkbench account={this.state.account} {...props} />)} />
+        <Route exact path="/audit" render={(props) => this.renderSigninIfNotSignedIn(<AuditPage account={this.state.account} {...props} />)} />
       </Switch>
     );
   }

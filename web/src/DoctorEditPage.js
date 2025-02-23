@@ -13,8 +13,7 @@
 // limitations under the License.
 
 import React from "react";
-import {Button, Card, Col, Input, Row, Select } from "antd";
-import {LinkOutlined } from "@ant-design/icons";
+import {Button, Card, Col, Input, Row, Select} from "antd";
 import * as DoctorBackend from "./backend/DoctorBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
@@ -38,7 +37,7 @@ class DoctorEditPage extends React.Component {
   getDoctor() {
     DoctorBackend.getDoctor(
       this.props.account.owner,
-      this.state.doctorName,
+      this.state.doctorName
     ).then((res) => {
       if (res.status === "ok") {
         this.setState({
@@ -81,7 +80,7 @@ class DoctorEditPage extends React.Component {
               {i18next.t("general:Save")}
             </Button>
             <Button
-              style={{marginLeft: "20px" }}
+              style={{marginLeft: "20px"}}
               type="primary"
               onClick={() => this.submitDoctorEdit(true)}
             >
@@ -89,7 +88,7 @@ class DoctorEditPage extends React.Component {
             </Button>
             {this.state.mode === "add" ? (
               <Button
-                style={{marginLeft: "20px" }}
+                style={{marginLeft: "20px"}}
                 onClick={() => this.deleteDoctor()}
               >
                 {i18next.t("general:Cancel")}
@@ -97,14 +96,14 @@ class DoctorEditPage extends React.Component {
             ) : null}
           </div>
         }
-        style={{marginLeft: "5px" }}
+        style={{marginLeft: "5px"}}
         type="inner"
       >
-        <Row style={{marginTop: "10px" }}>
-          <Col style={{marginTop: "5px" }} span={Setting.isMobile() ? 22 : 2}>
+        <Row style={{marginTop: "10px"}}>
+          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
             {Setting.getLabel(
               i18next.t("general:Organization"),
-              i18next.t("general:Organization - Tooltip"),
+              i18next.t("general:Organization - Tooltip")
             )}{" "}
             :
           </Col>
@@ -117,11 +116,11 @@ class DoctorEditPage extends React.Component {
             />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px" }}>
-          <Col style={{marginTop: "5px" }} span={Setting.isMobile() ? 22 : 2}>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
             {Setting.getLabel(
               i18next.t("general:Name"),
-              i18next.t("general:Name - Tooltip"),
+              i18next.t("general:Name - Tooltip")
             )}{" "}
             :
           </Col>
@@ -134,11 +133,11 @@ class DoctorEditPage extends React.Component {
             />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px" }}>
-          <Col style={{marginTop: "5px" }} span={Setting.isMobile() ? 22 : 2}>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
             {Setting.getLabel(
               i18next.t("doctor:Department"),
-              i18next.t("doctor:Department - Tooltip"),
+              i18next.t("doctor:Department - Tooltip")
             )}{" "}
             :
           </Col>
@@ -151,36 +150,35 @@ class DoctorEditPage extends React.Component {
             />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px" }}>
-          <Col style={{marginTop: "5px" }} span={Setting.isMobile() ? 22 : 2}>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
             {Setting.getLabel(
               i18next.t("doctor:Gender"),
-              i18next.t("doctor:Gender - Tooltip"),
+              i18next.t("doctor:Gender - Tooltip")
             )}{" "}
             :
           </Col>
           <Col span={22}>
             <Select
               virtual={false}
-              style={{width: "100%" }}
+              style={{width: "100%"}}
               value={this.state.doctor.gender}
               onChange={(value) => {
                 this.updateDoctorField("gender", value);
               }}
               options={[
-                {value: "Male", label: "Male" },
-                {value: "Female", label: "Female" },
-                {value: "Other", label: "Other" },
+                {value: "Male", label: "Male"},
+                {value: "Female", label: "Female"},
+                {value: "Other", label: "Other"},
               ].map((item) => Setting.getOption(item.label, item.value))}
             />
           </Col>
         </Row>
-        // AccessLevel
-        <Row style={{marginTop: "20px" }}>
-          <Col style={{marginTop: "5px" }} span={Setting.isMobile() ? 22 : 2}>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
             {Setting.getLabel(
               i18next.t("doctor:AccessLevel"),
-              i18next.t("doctor:AccessLevel - Tooltip"),
+              i18next.t("doctor:AccessLevel - Tooltip")
             )}{" "}
             :
           </Col>
@@ -193,11 +191,11 @@ class DoctorEditPage extends React.Component {
             />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px" }}>
-          <Col style={{marginTop: "5px" }} span={Setting.isMobile() ? 22 : 2}>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
             {Setting.getLabel(
               i18next.t("doctor:HospitalName"),
-              i18next.t("doctor:HospitalName - Tooltip"),
+              i18next.t("doctor:HospitalName - Tooltip")
             )}{" "}
             :
           </Col>
@@ -219,7 +217,7 @@ class DoctorEditPage extends React.Component {
     DoctorBackend.updateDoctor(
       this.state.doctor.owner,
       this.state.doctorName,
-      doctor,
+      doctor
     )
       .then((res) => {
         if (res.status === "ok") {
@@ -232,7 +230,7 @@ class DoctorEditPage extends React.Component {
               this.props.history.push("/doctors");
             } else {
               this.props.history.push(
-                `/doctors/${this.state.doctor.owner}/${encodeURIComponent(this.state.doctor.name)}`,
+                `/doctors/${this.state.doctor.owner}/${encodeURIComponent(this.state.doctor.name)}`
               );
             }
             // this.getDoctor(true);
@@ -257,14 +255,14 @@ class DoctorEditPage extends React.Component {
         } else {
           Setting.showMessage(
             "error",
-            `${i18next.t("general:Failed to delete")}: ${res.msg}`,
+            `${i18next.t("general:Failed to delete")}: ${res.msg}`
           );
         }
       })
       .catch((error) => {
         Setting.showMessage(
           "error",
-          `${i18next.t("general:Failed to connect to server")}: ${error}`,
+          `${i18next.t("general:Failed to connect to server")}: ${error}`
         );
       });
   }
@@ -273,12 +271,12 @@ class DoctorEditPage extends React.Component {
     return (
       <div>
         {this.state.doctor !== null ? this.renderDoctor() : null}
-        <div style={{marginTop: "20px", marginLeft: "40px" }}>
+        <div style={{marginTop: "20px", marginLeft: "40px"}}>
           <Button size="large" onClick={() => this.submitDoctorEdit(false)}>
             {i18next.t("general:Save")}
           </Button>
           <Button
-            style={{marginLeft: "20px" }}
+            style={{marginLeft: "20px"}}
             type="primary"
             size="large"
             onClick={() => this.submitDoctorEdit(true)}
@@ -287,7 +285,7 @@ class DoctorEditPage extends React.Component {
           </Button>
           {this.state.mode === "add" ? (
             <Button
-              style={{marginLeft: "20px" }}
+              style={{marginLeft: "20px"}}
               size="large"
               onClick={() => this.deleteDoctor()}
             >

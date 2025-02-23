@@ -97,7 +97,7 @@ class DoctorListPage extends BaseListPage {
               rel="noreferrer"
               href={Setting.getMyProfileUrl(this.props.account).replace(
                 "/account",
-                `/organizations/${text}`,
+                `/organizations/${text}`
               )}
             >
               {text}
@@ -177,7 +177,7 @@ class DoctorListPage extends BaseListPage {
                 }}
                 onClick={() =>
                   this.props.history.push(
-                    `/doctors/${doctor.owner}/${doctor.name}`,
+                    `/doctors/${doctor.owner}/${doctor.name}`
                   )
                 }
               >
@@ -254,7 +254,7 @@ class DoctorListPage extends BaseListPage {
       field,
       value,
       sortField,
-      sortOrder,
+      sortOrder
     ).then((res) => {
       this.setState({
         loading: false,
