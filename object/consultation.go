@@ -28,18 +28,11 @@ type Consultation struct {
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Category string `xorm:"varchar(100)" json:"category"`
-	Type     string `xorm:"varchar(100)" json:"type"`
+	PatientName string `xorm:"varchar(100)" json:"patientName"`
+	DoctorName  string `xorm:"varchar(100)" json:"doctor"`
+	ExpiredTime string `xorm:"varchar(100)" json:"expiredTime"`
 
-	ClientId     string `xorm:"varchar(100)" json:"clientId"`
-	ClientSecret string `xorm:"varchar(100)" json:"clientSecret"`
-	Region       string `xorm:"varchar(100)" json:"region"`
-	Network      string `xorm:"varchar(100)" json:"network"`
-	Chain        string `xorm:"varchar(100)" json:"chain"`
-	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
-
-	State           string `xorm:"varchar(100)" json:"state"`
-	ConsultationUrl string `xorm:"varchar(200)" json:"consultationUrl"`
+	AuthorizedHospital string `xorm:"varchar(256)" json:"authorizedHospital"`
 }
 
 func GetConsultationCount(owner, field, value string) (int64, error) {
@@ -100,9 +93,9 @@ func GetMaskedConsultation(consultation *Consultation, errs ...error) (*Consulta
 		return nil, nil
 	}
 
-	if consultation.ClientSecret != "" {
-		consultation.ClientSecret = "***"
-	}
+	// if consultation.ClientSecret != "" {
+	// 	consultation.ClientSecret = "***"
+	// }
 	return consultation, nil
 }
 
@@ -131,9 +124,9 @@ func UpdateConsultation(id string, consultation *Consultation) (bool, error) {
 		return false, nil
 	}
 
-	if consultation.ClientSecret == "***" {
-		consultation.ClientSecret = p.ClientSecret
-	}
+	// if consultation.ClientSecret == "***" {
+	// 	consultation.ClientSecret = p.ClientSecret
+	// }
 
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(consultation)
 	if err != nil {

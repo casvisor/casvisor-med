@@ -34,12 +34,10 @@ class ConsultationListPage extends BaseListPage {
       createdTime: moment().format(),
       updatedTime: moment().format(),
       displayName: `New Consultation - ${Setting.getRandomName()}`,
-      category: "Public Cloud",
-      type: "Amazon Web Services",
-      clientId: "",
-      clientSecret: "",
-      region: "us-west",
-      state: "Active",
+      patientName: "Unknown",
+      doctorName: "Unknown",
+      authorizedHospital: "",
+      expirationTime: moment().add(1, "years").format(),
     };
   }
 
@@ -122,63 +120,32 @@ class ConsultationListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Category"),
+        title: i18next.t("general:Patient Name"),
+        dataIndex: "patientName",
+        key: "patientName",
+        width: "120px",
+        sorter: (a, b) => a.category.localeCompare(b.category),
+      },
+      {
+        title: i18next.t("general:Doctor Name"),
         dataIndex: "category",
         key: "category",
         width: "120px",
         sorter: (a, b) => a.category.localeCompare(b.category),
       },
       {
-        title: i18next.t("general:Type"),
-        dataIndex: "type",
-        key: "type",
+        title: i18next.t("general:Expired Time"),
+        dataIndex: "expiredTime",
+        key: "expiredTime",
         width: "120px",
-        sorter: (a, b) => a.type.localeCompare(b.type),
+        sorter: (a, b) => a.category.localeCompare(b.category),
       },
       {
-        title: i18next.t("general:Client ID"),
-        dataIndex: "clientId",
-        key: "clientId",
+        title: i18next.t("general:Authorized Hospital"),
+        dataIndex: "authorizedHospital",
+        key: "authorizedHospital",
         width: "120px",
-        sorter: (a, b) => a.clientId.localeCompare(b.clientId),
-      },
-      {
-        title: i18next.t("general:Client secret"),
-        dataIndex: "clientSecret",
-        key: "clientSecret",
-        width: "120px",
-        sorter: (a, b) => a.clientSecret.localeCompare(b.clientSecret),
-      },
-      {
-        title: i18next.t("general:Region"),
-        dataIndex: "region",
-        key: "region",
-        width: "90px",
-        sorter: (a, b) => a.region.localeCompare(b.region),
-      },
-      {
-        title: i18next.t("consultation:Consultation URL"),
-        dataIndex: "consultationUrl",
-        key: "consultationUrl",
-        width: "150px",
-        sorter: true,
-        ...this.getColumnSearchProps("consultationUrl"),
-        render: (text, record, index) => {
-          return (
-            <a target="_blank" rel="noreferrer" href={text}>
-              {
-                Setting.getShortText(text)
-              }
-            </a>
-          );
-        },
-      },
-      {
-        title: i18next.t("general:State"),
-        dataIndex: "state",
-        key: "state",
-        width: "90px",
-        sorter: (a, b) => a.state.localeCompare(b.state),
+        sorter: (a, b) => a.category.localeCompare(b.category),
       },
       {
         title: i18next.t("general:Action"),
