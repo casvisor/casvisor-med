@@ -135,29 +135,6 @@ class CaaseEditPage extends React.Component {
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
             {Setting.getLabel(
-              i18next.t("caase:State"),
-              i18next.t("caase:State - Tooltip")
-            )}{" "}
-            :
-          </Col>
-          <Col span={22}>
-            <Select
-              virtual={false}
-              style={{width: "100%"}}
-              value={this.state.caase.state}
-              onChange={(value) => {
-                this.updateCaaseField("state", value);
-              }}
-              options={[
-                {value: "Active", label: "Active"},
-                {value: "Inactive", label: "Inactive"},
-              ].map((item) => Setting.getOption(item.label, item.value))}
-            />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}}>
-          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
-            {Setting.getLabel(
               i18next.t("caase:Symptoms"),
               i18next.t("caase:Symptoms - Tooltip")
             )}{" "}
