@@ -205,15 +205,35 @@ class CaaseListPage extends BaseListPage {
         title: i18next.t("general:Patient Name"),
         dataIndex: "patientName",
         key: "patientName",
-        width: "160px",
-        sorter: (a, b) => a.patientName.localeCompare(b.patientName),
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("patientName"),
+        render: (text, record, index) => {
+          return (
+            <Link to={`/patients/${record.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
+          );
+        },
       },
       {
         title: i18next.t("general:Doctor Name"),
         dataIndex: "doctorName",
         key: "doctorName",
-        width: "160px",
-        sorter: (a, b) => a.doctorName.localeCompare(b.doctorName),
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("doctorName"),
+        render: (text, record, index) => {
+          return (
+            <Link to={`/doctors/${record.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
+          );
+        },
       },
       {
         title: i18next.t("general:Specialist Alliance ID"),

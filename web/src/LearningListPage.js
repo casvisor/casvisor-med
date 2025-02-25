@@ -146,8 +146,18 @@ class LearningListPage extends BaseListPage {
         title: i18next.t("general:Hospital Name"),
         dataIndex: "hospitalName",
         key: "hospitalName",
-        width: "150px",
-        sorter: (a, b) => a.hospitalName.localeCompare(b.hospitalName),
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("hospitalName"),
+        render: (text, record, index) => {
+          return (
+            <Link to={`/hospitals/${record.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
+          );
+        },
       },
       {
         title: i18next.t("general:Local batch size"),

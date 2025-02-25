@@ -123,15 +123,35 @@ class ConsultationListPage extends BaseListPage {
         title: i18next.t("general:Patient Name"),
         dataIndex: "patientName",
         key: "patientName",
-        width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("patientName"),
+        render: (text, record, index) => {
+          return (
+            <Link to={`/patients/${record.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
+          );
+        },
       },
       {
         title: i18next.t("general:Doctor Name"),
-        dataIndex: "category",
-        key: "category",
-        width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
+        dataIndex: "doctorName",
+        key: "doctorName",
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("doctorName"),
+        render: (text, record, index) => {
+          return (
+            <Link to={`/doctors/${record.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
+          );
+        },
       },
       {
         title: i18next.t("general:Expired Time"),
@@ -144,8 +164,18 @@ class ConsultationListPage extends BaseListPage {
         title: i18next.t("general:Authorized Hospital"),
         dataIndex: "authorizedHospital",
         key: "authorizedHospital",
-        width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("authorizedHospital"),
+        render: (text, record, index) => {
+          return (
+            <Link to={`/hospitals/${record.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
+          );
+        },
       },
       {
         title: i18next.t("general:Action"),
