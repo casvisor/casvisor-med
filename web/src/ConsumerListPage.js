@@ -57,9 +57,9 @@ class ConsumerListPage extends BaseListPage {
       owner: this.props.account.owner,
       name: Setting.GenerateId(),
       createdTime: moment().format(),
-      provider: "",
+      chainProvider: "",
       user: this.props.account.name,
-      teeProviderIp: "::1",
+      teeProvider: "",
       datasetId: "",
       attestId: "",
       taskId: "",
@@ -197,11 +197,11 @@ class ConsumerListPage extends BaseListPage {
       },
       {
         title: i18next.t("general:Blockchain Provider"),
-        dataIndex: "blockProvider",
-        key: "blockProvider",
+        dataIndex: "chainProvider",
+        key: "chainProvider",
         width: "90px",
         sorter: true,
-        ...this.getColumnSearchProps("blockProvider"),
+        ...this.getColumnSearchProps("chainProvider"),
         render: (text, consumer, index) => {
           return (
             <Link to={`/providers/${consumer.owner}/${text}`}>
