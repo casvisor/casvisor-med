@@ -50,6 +50,8 @@ import LearningListPage from "./LearningListPage";
 import LearningEditPage from "./LearningEditPage";
 import PatientListPage from "./PatientListPage";
 import PatientEditPage from "./PatientEditPage";
+import ConsumerListPage from "./ConsumerListPage";
+import ConsumerEditPage from "./ConsumerEditPage";
 import AuditPage from "./AuditPage";
 
 const {Header, Footer, Content} = Layout;
@@ -225,6 +227,7 @@ class App extends Component {
     res.push(Setting.getItem(<Link to="/learnings">{i18next.t("general:Learnings")}</Link>, "learnings"));
     res.push(Setting.getItem(<Link to="/patients">{i18next.t("general:Patients")}</Link>, "patients"));
     res.push(Setting.getItem(<Link to="/audit">{i18next.t("general:Audit")}</Link>, "audit"));
+    res.push(Setting.getItem(<Link to="/consumers">{i18next.t("general:Consumers")}</Link>, "patients"));
     res.push(Setting.getItem(<Link to="/machines">{i18next.t("general:Machines")}</Link>, "machines"));
     res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>, "sessions"));
     res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>, "records"));
@@ -275,6 +278,8 @@ class App extends Component {
         <Route exact path="/learnings/:organizationName/:learningName" render={(props) => this.renderSigninIfNotSignedIn(<LearningEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/patients" render={(props) => this.renderSigninIfNotSignedIn(<PatientListPage account={this.state.account} {...props} />)} />
         <Route exact path="/patients/:organizationName/:patientName" render={(props) => this.renderSigninIfNotSignedIn(<PatientEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/consumers" render={(props) => this.renderSigninIfNotSignedIn(<ConsumerListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/consumers/:organizationName/:consumerName" render={(props) => this.renderSigninIfNotSignedIn(<ConsumerEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/machines" render={(props) => this.renderSigninIfNotSignedIn(<MachineListPage account={this.state.account} {...props} />)} />
         <Route exact path="/machines/:organizationName/:machineName" render={(props) => this.renderSigninIfNotSignedIn(<MachineEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/sessions" render={(props) => this.renderSigninIfNotSignedIn(<SessionListPage account={this.state.account} {...props} />)} />

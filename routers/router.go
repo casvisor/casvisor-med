@@ -108,4 +108,14 @@ func initAPI() {
 	beego.Router("/api/update-patient", &controllers.ApiController{}, "POST:UpdatePatient")
 	beego.Router("/api/add-patient", &controllers.ApiController{}, "POST:AddPatient")
 	beego.Router("/api/delete-patient", &controllers.ApiController{}, "POST:DeletePatient")
+
+	beego.Router("/api/get-consumers", &controllers.ApiController{}, "GET:GetConsumers")
+	beego.Router("/api/get-consumer", &controllers.ApiController{}, "GET:GetConsumer")
+	beego.Router("/api/update-consumer", &controllers.ApiController{}, "POST:UpdateConsumer")
+	beego.Router("/api/add-consumer", &controllers.ApiController{}, "POST:AddConsumer")
+	beego.Router("/api/delete-consumer", &controllers.ApiController{}, "POST:DeleteConsumer")
+
+	beego.Router("/api/commit-consumer", &controllers.ApiController{}, "POST:CommitConsumer")
+	beego.Router("/api/query-consumer", &controllers.ApiController{}, "GET:QueryConsumer")
+
 }
