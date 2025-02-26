@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Card, Col, Input, message, Row, Upload} from "antd";
+import {Button, Card, Col, Input, Row, Upload, message} from "antd";
 import * as Setting from "./Setting";
 import i18next from "i18next";
 import moment from "moment";

@@ -14,7 +14,7 @@
 
 import React, {Component} from "react";
 import {Link, Redirect, Route, Switch, withRouter} from "react-router-dom";
-import {legacyLogicalPropertiesTransformer, StyleProvider} from "@ant-design/cssinjs";
+import {StyleProvider, legacyLogicalPropertiesTransformer} from "@ant-design/cssinjs";
 import {Avatar, Button, Card, ConfigProvider, Drawer, Dropdown, FloatButton, Layout, Menu} from "antd";
 import {BarsOutlined, DownOutlined, LogoutOutlined, SettingOutlined} from "@ant-design/icons";
 import "./App.less";
