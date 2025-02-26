@@ -29,8 +29,8 @@ type Caase struct {
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
 	Symptoms      string `xorm:"varchar(100)" json:"symptoms"`
-	Diagnosis     string `xorm:"varchar(100)" json:"diagnostics"`
-	DiagnosisDate string `xorm:"varchar(100)" json:"diagnosticDate"`
+	Diagnosis     string `xorm:"varchar(100)" json:"diagnosis"`
+	DiagnosisDate string `xorm:"varchar(100)" json:"diagnosisDate"`
 	Prescription  string `xorm:"varchar(100)" json:"prescription"`
 	FollowUp      string `xorm:"varchar(100)" json:"followUp"`
 
