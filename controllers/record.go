@@ -16,6 +16,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"math/rand"
+	"time"
 
 	"github.com/beego/beego/utils/pagination"
 	"github.com/casvisor/casvisor/object"
@@ -130,8 +132,78 @@ func (c *ApiController) AddRecord() {
 		record.UserAgent = c.getUserAgent()
 	}
 
+	_, err = handleRequestUri(record)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
 	c.Data["json"] = wrapActionResponse(object.AddRecord(&record))
 	c.ServeJSON()
+}
+
+func handleRequestUri(record object.Record) (bool, error) {
+	requestUri := record.RequestUri
+
+	switch requestUri {
+	case "/api/add-learning":
+		var jsonData map[string]interface{}
+
+		err := json.Unmarshal([]byte(record.Object), &jsonData)
+		if err != nil {
+			return false, err
+		}
+
+		name := getJsonData("name", jsonData)
+		if name == "" {
+			name = "learning_" + generateRandomString(6)
+		}
+
+		newLearning := object.Learning{
+			Owner:          record.Owner,
+			Name:           name,
+			CreatedTime:    record.CreatedTime,
+			UpdatedTime:    record.CreatedTime,
+			DisplayName:    name,
+			Discription:    getJsonData("discription", jsonData),
+			Epoch:          getJsonData("epoch", jsonData),
+			ModelPath:      getJsonData("modelPath", jsonData),
+			HospitalName:   getJsonData("hospitalName", jsonData),
+			LocalBatchSize: getJsonData("localBatchSize", jsonData),
+			LocalEpochs:    getJsonData("localEpochs", jsonData),
+		}
+
+		affected, err := object.AddLearning(&newLearning)
+		// if affected {
+		// 	println("------------------> AddLearning success")
+		// } else {
+		// 	println("------------------> AddLearning failed")
+		// }
+		return affected, err
+
+	default:
+		return false, nil
+	}
+}
+
+func getJsonData(key string, jsonData map[string]interface{}) string {
+
+	if data, ok := jsonData[key]; ok {
+		return data.(string)
+	} else {
+		return ""
+	}
+}
+
+func generateRandomString(length int) string {
+	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	result := make([]byte, length)
+	rand.Seed(time.Now().UnixNano()) // 使用当前时间作为随机数种子
+
+	for i := range result {
+		result[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(result)
 }
 
 // DeleteRecord
