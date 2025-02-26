@@ -14,16 +14,16 @@
 
 import React from "react";
 import {Link} from "react-router-dom";
-import {Button, Switch, Table} from "antd";
+import {Button, Table} from "antd";
 import moment from "moment";
 import * as Setting from "./Setting";
-import * as ConsumerBackend from "./backend/ConsumerBackend";
+import * as SharingBackend from "./backend/SharingBackend";
 import * as ProviderBackend from "./backend/ProviderBackend";
 import i18next from "i18next";
 import BaseListPage from "./BaseListPage";
 import PopconfirmModal from "./common/modal/PopconfirmModal";
 
-class ConsumerListPage extends BaseListPage {
+class SharingListPage extends BaseListPage {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,46 +52,58 @@ class ConsumerListPage extends BaseListPage {
     });
   }
 
-  newConsumer() {
+  newSharing() {
     return {
       owner: this.props.account.owner,
-      name: Setting.GenerateId(),
+      name: `sharing_${Setting.getRandomName()}`,
       createdTime: moment().format(),
-      chainProvider: "",
-      user: this.props.account.name,
-      teeProvider: "",
+      updatedTime: moment().format(),
+      displayName: `New Sharing - ${Setting.getRandomName()}`,
+      dataOwner: "",
+      authorizedUser: "",
       datasetId: "",
-      attestId: "",
+      dataDiscription: "",
+      dataDigest: "",
+      dataSignature: "",
       taskId: "",
+      taskDescription: "",
+      taskDigest: "",
+      taskSignature: "",
+      teeProvider: "",
+      attestId: "",
       signerId: "",
-      isRun: false,
+      totalCount: "0",
+      leftCount: "0",
+      expireTime: "",
+      usageBlock: "",
+      avaliable: "true",
     };
   }
 
-  addConsumer() {
-    const newConsumer = this.newConsumer();
-    ConsumerBackend.addConsumer(newConsumer)
+  addSharing() {
+    const newSharing = this.newSharing();
+    SharingBackend.addSharing(newSharing)
       .then((res) => {
         if (res.status === "ok") {
           this.props.history.push({
-            pathname: `/consumers/${newConsumer.owner}/${newConsumer.name}`,
+            pathname: `/sharings/${newSharing.owner}/${newSharing.name}`,
             mode: "add",
           });
-          Setting.showMessage("success", "Consumer added successfully");
+          Setting.showMessage("success", "Sharing added successfully");
         } else {
-          Setting.showMessage("error", `Failed to add Consumer: ${res.msg}`);
+          Setting.showMessage("error", `Failed to add Sharing: ${res.msg}`);
         }
       })
       .catch((error) => {
-        Setting.showMessage("error", `Consumer failed to add: ${error}`);
+        Setting.showMessage("error", `Sharing failed to add: ${error}`);
       });
   }
 
-  deleteConsumer(i) {
-    ConsumerBackend.deleteConsumer(this.state.data[i])
+  deleteSharing(i) {
+    SharingBackend.deleteSharing(this.state.data[i])
       .then((res) => {
         if (res.status === "ok") {
-          Setting.showMessage("success", "Consumer deleted successfully");
+          Setting.showMessage("success", "Sharing deleted successfully");
           this.setState({
             data: Setting.deleteRow(this.state.data, i),
             pagination: {
@@ -100,45 +112,45 @@ class ConsumerListPage extends BaseListPage {
             },
           });
         } else {
-          Setting.showMessage("error", `Failed to delete Consumer: ${res.msg}`);
+          Setting.showMessage("error", `Failed to delete Sharing: ${res.msg}`);
         }
       })
       .catch((error) => {
-        Setting.showMessage("error", `Consumer failed to delete: ${error}`);
+        Setting.showMessage("error", `Sharing failed to delete: ${error}`);
       });
   }
 
-  commitConsumer(i) {
-    ConsumerBackend.commitConsumer(this.state.data[i])
+  commitSharing(i) {
+    SharingBackend.commitSharing(this.state.data[i])
       .then((res) => {
         if (res.status === "ok") {
-          Setting.showMessage("success", "Consumer committed successfully");
+          Setting.showMessage("success", "Sharing committed successfully");
           this.fetch({
             pagination: this.state.pagination,
           });
         } else {
-          Setting.showMessage("error", `Failed to commit Consumer: ${res.msg}`);
+          Setting.showMessage("error", `Failed to commit Sharing: ${res.msg}`);
         }
       })
       .catch((error) => {
-        Setting.showMessage("error", `Consumer failed to commit: ${error}`);
+        Setting.showMessage("error", `Sharing failed to commit: ${error}`);
       });
   }
 
-  queryConsumer(consumer) {
-    ConsumerBackend.queryConsumer(consumer.owner, consumer.name).then((res) => {
+  querySharing(sharing) {
+    SharingBackend.querySharing(sharing.owner, sharing.name).then((res) => {
       if (res.status === "ok") {
         Setting.showMessage(
           res.data.includes("Mismatched") ? "error" : "success",
           `${res.data}`
         );
       } else {
-        Setting.showMessage("error", `Failed to query consumer: ${res.msg}`);
+        Setting.showMessage("error", `Failed to query sharing: ${res.msg}`);
       }
     });
   }
 
-  renderTable(consumers) {
+  renderTable(sharings) {
     const columns = [
       {
         title: i18next.t("general:Organization"),
@@ -147,7 +159,7 @@ class ConsumerListPage extends BaseListPage {
         width: "110px",
         sorter: true,
         ...this.getColumnSearchProps("organization"),
-        render: (text, consumer, index) => {
+        render: (text, sharing, index) => {
           return (
             <a
               target="_blank"
@@ -163,23 +175,15 @@ class ConsumerListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:ID"),
-        dataIndex: "id",
-        key: "id",
-        width: "90px",
-        sorter: true,
-        ...this.getColumnSearchProps("id"),
-      },
-      {
         title: i18next.t("general:Name"),
         dataIndex: "name",
         key: "name",
         width: "300px",
         sorter: true,
         ...this.getColumnSearchProps("name"),
-        render: (text, consumer, index) => {
+        render: (text, sharing, index) => {
           return (
-            <Link to={`/consumers/${consumer.organization}/${consumer.name}`}>
+            <Link to={`/sharings/${sharing.owner}/${sharing.name}`}>
               {text}
             </Link>
           );
@@ -191,56 +195,37 @@ class ConsumerListPage extends BaseListPage {
         key: "createdTime",
         width: "150px",
         sorter: true,
-        render: (text, consumer, index) => {
+        render: (text, sharing, index) => {
           return Setting.getFormattedDate(text);
         },
       },
       {
-        title: i18next.t("general:Blockchain Provider"),
-        dataIndex: "chainProvider",
-        key: "chainProvider",
-        width: "90px",
-        sorter: true,
-        ...this.getColumnSearchProps("chainProvider"),
-        render: (text, consumer, index) => {
-          return (
-            <Link to={`/providers/${consumer.owner}/${text}`}>
-              {
-                Setting.getShortText(text, 25)
-              }
-            </Link>
-          );
-        },
-      },
-      {
-        title: i18next.t("general:User"),
-        dataIndex: "user",
-        key: "user",
+        title: i18next.t("general:Data Owner"),
+        dataIndex: "dataOwner",
+        key: "dataOwner",
         width: "120px",
         sorter: true,
-        ...this.getColumnSearchProps("user"),
-        render: (text, consumer, index) => {
+        ...this.getColumnSearchProps("dataOwner"),
+        render: (text, sharing, index) => {
           return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/users/${consumer.organization}/${consumer.user}`)}>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/users/${sharing.ownerOrganization}/${sharing.dataOwner}`)}>
               {text}
             </a>
           );
         },
       },
       {
-        title: i18next.t("general:TEE Provider"),
-        dataIndex: "teeProvider",
-        key: "teeProvider",
-        width: "90px",
+        title: i18next.t("general:Data User"),
+        dataIndex: "dataUser",
+        key: "dataUser",
+        width: "120px",
         sorter: true,
-        ...this.getColumnSearchProps("teeProvider"),
-        render: (text, consumer, index) => {
+        ...this.getColumnSearchProps("dataUser"),
+        render: (text, sharing, index) => {
           return (
-            <Link to={`/providers/${consumer.owner}/${text}`}>
-              {
-                Setting.getShortText(text, 25)
-              }
-            </Link>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/users/${sharing.userOrganization}/${sharing.dataUser}`)}>
+              {text}
+            </a>
           );
         },
       },
@@ -253,12 +238,28 @@ class ConsumerListPage extends BaseListPage {
         ...this.getColumnSearchProps("datasetId"),
       },
       {
-        title: i18next.t("general:Attest ID"),
-        dataIndex: "attestId",
-        key: "attestId",
+        title: i18next.t("general:Data Description"),
+        dataIndex: "dataDiscription",
+        key: "dataDiscription",
         width: "150px",
         sorter: true,
-        ...this.getColumnSearchProps("attestId"),
+        ...this.getColumnSearchProps("dataDiscription"),
+      },
+      {
+        title: i18next.t("general:Data Digest"),
+        dataIndex: "dataDigest",
+        key: "dataDigest",
+        width: "150px",
+        sorter: true,
+        ...this.getColumnSearchProps("dataDigest"),
+      },
+      {
+        title: i18next.t("general:Data Signature"),
+        dataIndex: "dataSignature",
+        key: "dataSignature",
+        width: "150px",
+        sorter: true,
+        ...this.getColumnSearchProps("dataSignature"),
       },
       {
         title: i18next.t("general:Task ID"),
@@ -269,6 +270,46 @@ class ConsumerListPage extends BaseListPage {
         ...this.getColumnSearchProps("taskId"),
       },
       {
+        title: i18next.t("general:Task Description"),
+        dataIndex: "taskDescription",
+        key: "taskDescription",
+        width: "150px",
+        sorter: true,
+        ...this.getColumnSearchProps("taskDescription"),
+      },
+      {
+        title: i18next.t("general:Task Digest"),
+        dataIndex: "taskDigest",
+        key: "taskDigest",
+        width: "150px",
+        sorter: true,
+        ...this.getColumnSearchProps("taskDigest"),
+      },
+      {
+        title: i18next.t("general:Task Signature"),
+        dataIndex: "taskSignature",
+        key: "taskSignature",
+        width: "150px",
+        sorter: true,
+        ...this.getColumnSearchProps("taskSignature"),
+      },
+      {
+        title: i18next.t("general:TEE Provider"),
+        dataIndex: "teeProvider",
+        key: "teeProvider",
+        width: "150px",
+        sorter: true,
+        ...this.getColumnSearchProps("teeProvider"),
+      },
+      {
+        title: i18next.t("general:Attest ID"),
+        dataIndex: "attestId",
+        key: "attestId",
+        width: "150px",
+        sorter: true,
+        ...this.getColumnSearchProps("attestId"),
+      },
+      {
         title: i18next.t("general:Signer ID"),
         dataIndex: "signerId",
         key: "signerId",
@@ -277,66 +318,82 @@ class ConsumerListPage extends BaseListPage {
         ...this.getColumnSearchProps("signerId"),
       },
       {
-        title: i18next.t("consumer:Response"),
-        dataIndex: "response",
-        key: "response",
-        width: "90px",
+        title: i18next.t("general:Total Count"),
+        dataIndex: "totalCount",
+        key: "totalCount",
+        width: "150px",
         sorter: true,
-        ...this.getColumnSearchProps("response"),
+        ...this.getColumnSearchProps("totalCount"),
       },
       {
-        title: i18next.t("consumer:Object"),
-        dataIndex: "object",
-        key: "object",
-        width: "90px",
+        title: i18next.t("general:Left Count"),
+        dataIndex: "leftCount",
+        key: "leftCount",
+        width: "150px",
         sorter: true,
-        ...this.getColumnSearchProps("object"),
+        ...this.getColumnSearchProps("leftCount"),
       },
       {
-        title: i18next.t("general:Result"),
-        dataIndex: "result",
-        key: "result",
-        width: "90px",
+        title: i18next.t("general:Expire Time"),
+        dataIndex: "expireTime",
+        key: "expireTime",
+        width: "150px",
         sorter: true,
-        ...this.getColumnSearchProps("result"),
+        render: (text) => Setting.getFormattedDate(text),
       },
       {
-        title: i18next.t("general:Is run"),
-        dataIndex: "isRun",
-        key: "isRun",
-        width: "140px",
+        title: i18next.t("general:TEE Provider"),
+        dataIndex: "teeProvider",
+        key: "teeProvider",
+        width: "90px",
         sorter: true,
-        render: (text, consumer, index) => {
-          if (
-            !["signup", "login", "logout", "update-user"].includes(
-              consumer.action
-            )
-          ) {
-            return null;
-          }
-
+        ...this.getColumnSearchProps("teeProvider"),
+        render: (text, sharing, index) => {
           return (
-            <Switch
-              disabled
-              checkedChildren="ON"
-              unCheckedChildren="OFF"
-              checked={text}
-            />
+            <Link to={`/providers/${sharing.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
           );
         },
       },
       {
-        title: i18next.t("general:Block"),
-        dataIndex: "block",
-        key: "block",
+        title: i18next.t("general:Blockchain Provider"),
+        dataIndex: "chainProvider",
+        key: "chainProvider",
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("chainProvider"),
+        render: (text, sharing, index) => {
+          return (
+            <Link to={`/providers/${sharing.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
+          );
+        },
+      },
+      {
+        title: i18next.t("general:Avaliable"),
+        dataIndex: "avaliable",
+        key: "avaliable",
+        width: "150px",
+        sorter: (a, b) => a.state.localeCompare(b.state),
+      },
+      {
+        title: i18next.t("general:Usage Block"),
+        dataIndex: "usageBlock",
+        key: "usageBlock",
         width: "90px",
         sorter: true,
         fixed: Setting.isMobile() ? "false" : "right",
-        ...this.getColumnSearchProps("block"),
-        render: (text, consumer, index) => {
+        ...this.getColumnSearchProps("usageBlock"),
+        render: (text, sharing, index) => {
           return Setting.getBlockBrowserUrl(
             this.state.providerMap,
-            consumer.provider,
+            sharing.provider,
             text
           );
         },
@@ -347,31 +404,20 @@ class ConsumerListPage extends BaseListPage {
         key: "action",
         width: "270px",
         fixed: Setting.isMobile() ? "false" : "right",
-        render: (text, consumer, index) => {
+        render: (text, sharing, index) => {
           return (
             <div>
-              {consumer.block === "" ? (
-                <Button
-                  disabled={consumer.block !== ""}
-                  style={{marginTop: "10px", marginRight: "10px"}}
-                  type="primary"
-                  danger
-                  onClick={() => this.commitConsumer(index)}
-                >
-                  {i18next.t("consumer:Commit")}
-                </Button>
-              ) : (
-                <Button
-                  disabled={consumer.block === ""}
-                  style={{marginTop: "10px", marginRight: "10px"}}
-                  type="primary"
-                  onClick={() => this.queryConsumer(consumer)}
-                >
-                  {i18next.t("consumer:Query")}
-                </Button>
-              )}
               <Button
-                // disabled={consumer.owner !== this.props.account.owner}
+                disabled={sharing.usageBlock === ""}
+                style={{marginTop: "10px", marginRight: "10px"}}
+                type="primary"
+                danger
+                onClick={() => this.querySharing(index)}
+              >
+                {i18next.t("sharing:Query")}
+              </Button>
+              <Button
+                // disabled={sharing.owner !== this.props.account.owner}
                 style={{
                   marginTop: "10px",
                   marginBottom: "10px",
@@ -379,19 +425,19 @@ class ConsumerListPage extends BaseListPage {
                 }}
                 onClick={() =>
                   this.props.history.push(
-                    `/consumers/${consumer.owner}/${consumer.name}`
+                    `/sharings/${sharing.owner}/${sharing.name}`
                   )
                 }
               >
                 {i18next.t("general:View")}
               </Button>
               <PopconfirmModal
-                // disabled={consumer.owner !== this.props.account.owner}
+                // disabled={sharing.owner !== this.props.account.owner}
                 fakeDisabled={true}
                 title={
-                  i18next.t("general:Sure to delete") + `: ${consumer.name} ?`
+                  i18next.t("general:Sure to delete") + `: ${sharing.name} ?`
                 }
-                onConfirm={() => this.deleteConsumer(index)}
+                onConfirm={() => this.deleteSharing(index)}
               ></PopconfirmModal>
             </div>
           );
@@ -415,15 +461,15 @@ class ConsumerListPage extends BaseListPage {
         <Table
           scroll={{x: "max-content"}}
           columns={columns}
-          dataSource={consumers}
-          rowKey={(consumer) => `${consumer.owner}/${consumer.name}`}
+          dataSource={sharings}
+          rowKey={(sharing) => `${sharing.owner}/${sharing.name}`}
           size="middle"
           bordered
           pagination={paginationProps}
           title={() => (
             <div>
-              {i18next.t("general:Consumers")}&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" size="small" onClick={this.addConsumer.bind(this)}>{i18next.t("general:Add")}</Button>
+              {i18next.t("general:Sharings")}&nbsp;&nbsp;&nbsp;&nbsp;
+              <Button type="primary" size="small" onClick={this.addSharing.bind(this)}>{i18next.t("general:Add")}</Button>
             </div>
           )}
           loading={this.state.loading}
@@ -443,7 +489,7 @@ class ConsumerListPage extends BaseListPage {
       value = params.type;
     }
     this.setState({loading: true});
-    ConsumerBackend.getConsumers(
+    SharingBackend.getSharings(
       Setting.getRequestOrganization(this.props.account),
       params.pagination.current,
       params.pagination.pageSize,
@@ -478,4 +524,4 @@ class ConsumerListPage extends BaseListPage {
   };
 }
 
-export default ConsumerListPage;
+export default SharingListPage;

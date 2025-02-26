@@ -109,13 +109,12 @@ func initAPI() {
 	beego.Router("/api/add-patient", &controllers.ApiController{}, "POST:AddPatient")
 	beego.Router("/api/delete-patient", &controllers.ApiController{}, "POST:DeletePatient")
 
-	beego.Router("/api/get-consumers", &controllers.ApiController{}, "GET:GetConsumers")
-	beego.Router("/api/get-consumer", &controllers.ApiController{}, "GET:GetConsumer")
-	beego.Router("/api/update-consumer", &controllers.ApiController{}, "POST:UpdateConsumer")
-	beego.Router("/api/add-consumer", &controllers.ApiController{}, "POST:AddConsumer")
-	beego.Router("/api/delete-consumer", &controllers.ApiController{}, "POST:DeleteConsumer")
+	beego.Router("/api/get-sharings", &controllers.ApiController{}, "GET:GetSharings")
+	beego.Router("/api/get-sharing", &controllers.ApiController{}, "GET:GetSharing")
+	beego.Router("/api/update-sharing", &controllers.ApiController{}, "POST:UpdateSharing")
+	beego.Router("/api/add-sharing", &controllers.ApiController{}, "POST:AddSharing")
+	beego.Router("/api/delete-sharing", &controllers.ApiController{}, "POST:DeleteSharing")
 
-	beego.Router("/api/commit-consumer", &controllers.ApiController{}, "POST:CommitConsumer")
-	beego.Router("/api/query-consumer", &controllers.ApiController{}, "GET:QueryConsumer")
+	beego.Router("/api/query-sharing", &controllers.ApiController{}, "GET:QuerySharing")
 
 }
