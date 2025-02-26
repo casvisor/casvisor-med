@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from "react";
-import {Button, Card, Col, Input, Row, Select} from "antd";
+import {Button, Card, Col, Input, Row} from "antd";
 import * as CaaseBackend from "./backend/CaaseBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
@@ -214,29 +214,6 @@ class CaaseEditPage extends React.Component {
               onChange={(e) => {
                 this.updateCaaseField("followUp", e.target.value);
               }}
-            />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}}>
-          <Col style={{marginTop: "5px"}} span={Setting.isMobile() ? 22 : 2}>
-            {Setting.getLabel(
-              i18next.t("caase:Variation"),
-              i18next.t("caase:Variation - Tooltip")
-            )}{" "}
-            :
-          </Col>
-          <Col span={22}>
-            <Select
-              virtual={false}
-              style={{width: "100%"}}
-              value={this.state.caase.variation}
-              onChange={(value) => {
-                this.updateCaaseField("variation", value);
-              }}
-              options={[
-                {value: true, label: "True"},
-                {value: false, label: "False"},
-              ].map((item) => Setting.getOption(item.label, item.value))}
             />
           </Col>
         </Row>

@@ -20,36 +20,36 @@ import (
 	"github.com/casvisor/casvisor/object"
 )
 
-// CommitConsumer
-// @Title CommitConsumer
-// @Tag Consumer API
-// @Description commit a consumer
-// @Param   body    body   object.Consumer  true        "The details of the consumer"
+// CommitSharing
+// @Title CommitSharing
+// @Tag Sharing API
+// @Description commit a sharing
+// @Param   body    body   object.Sharing  true        "The details of the sharing"
 // @Success 200 {object} controllers.Response The Response object
-// @router /commit-consumer [post]
-func (c *ApiController) CommitConsumer() {
-	var consumer object.Consumer
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &consumer)
+// @router /commit-sharing [post]
+func (c *ApiController) CommitSharing() {
+	var sharing object.Sharing
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &sharing)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
 	}
 
-	c.Data["json"] = wrapActionResponse(object.CommitConsumer(&consumer))
+	c.Data["json"] = wrapActionResponse(object.CommitSharing(&sharing))
 	c.ServeJSON()
 }
 
-// QueryConsumer
-// @Title QueryConsumer
-// @Tag Consumer API
-// @Description query consumer
-// @Param   id     query    string  true        "The id ( owner/name ) of the consumer"
-// @Success 200 {object} object.Consumer The Response object
-// @router /query-consumer [get]
-func (c *ApiController) QueryConsumer() {
+// QuerySharing
+// @Title QuerySharing
+// @Tag Sharing API
+// @Description query sharing
+// @Param   id     query    string  true        "The id ( owner/name ) of the sharing"
+// @Success 200 {object} object.Sharing The Response object
+// @router /query-sharing [get]
+func (c *ApiController) QuerySharing() {
 	id := c.Input().Get("id")
 
-	res, err := object.QueryConsumer(id)
+	res, err := object.QuerySharing(id)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
