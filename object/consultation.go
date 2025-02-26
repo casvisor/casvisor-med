@@ -29,7 +29,7 @@ type Consultation struct {
 	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
 	PatientName string `xorm:"varchar(100)" json:"patientName"`
-	DoctorName  string `xorm:"varchar(100)" json:"doctor"`
+	DoctorName  string `xorm:"varchar(100)" json:"doctorName"`
 	ExpiredTime string `xorm:"varchar(100)" json:"expiredTime"`
 
 	AuthorizedHospital string `xorm:"varchar(256)" json:"authorizedHospital"`
