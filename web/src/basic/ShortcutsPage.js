@@ -19,10 +19,10 @@ import GridCards from "./GridCards";
 
 const ShortcutsPage = () => {
   const items = [
-    {link: "/assets", image: "/organizations", name: i18next.t("general:Assets"), description: i18next.t("general:Machines can be connected via RDP, VNC or SSH")},
-    {link: "/sessions", image: "/users", name: i18next.t("general:Sessions"), description: i18next.t("general:Active or history connection sessions")},
-    {link: "/records", image: "/providers", name: i18next.t("general:Records"), description: i18next.t("general:Audit logs")},
-    {link: "/workbench", image: "/applications", name: i18next.t("general:Workbench"), description: i18next.t("general:Remote desktop management all in one screen")},
+    {link: "/consultations", image: "/organizations", name: i18next.t("general:Consultations"), description: i18next.t("医院会诊管理")},
+    {link: "/learnings", image: "/users", name: i18next.t("general:Learnings"), description: i18next.t("机器学习、深度学习等AI任务管理")},
+    {link: "/pathscompare", image: "/providers", name: i18next.t("pathsCompare:Compare Paths"), description: i18next.t("临床路径对比、监管")},
+    {link: "/records", image: "/applications", name: i18next.t("general:Records"), description: i18next.t("操作日志上链、查询管理")},
   ];
 
   const getItems = () => {
