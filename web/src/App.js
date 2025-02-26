@@ -17,6 +17,7 @@ import {Link, Redirect, Route, Switch, withRouter} from "react-router-dom";
 import {StyleProvider, legacyLogicalPropertiesTransformer} from "@ant-design/cssinjs";
 import {Avatar, Button, Card, ConfigProvider, Drawer, Dropdown, FloatButton, Layout, Menu} from "antd";
 import {BarsOutlined, DownOutlined, LogoutOutlined, SettingOutlined} from "@ant-design/icons";
+import {MedicineBoxOutlined} from "@ant-design/icons";
 import "./App.less";
 import * as Setting from "./Setting";
 import * as AccountBackend from "./backend/AccountBackend";
@@ -221,12 +222,33 @@ class App extends Component {
     res.push(Setting.getItem(<Link to="/">{i18next.t("general:Home")}</Link>, ""));
     // res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>, "assets"));
     res.push(Setting.getItem(<Link to="/providers">{i18next.t("general:Providers")}</Link>, "providers"));
-    res.push(Setting.getItem(<Link to="/caases">{i18next.t("general:Caases")}</Link>, "caases"));
+    res.push({
+      key: "healthcare",
+      icon: <MedicineBoxOutlined />,
+      label: i18next.t("general:Healthcare"),
+      children: [
+        {
+          key: "hospitals",
+          label: <Link to="/hospitals">{i18next.t("general:Hospitals")}</Link>,
+        },
+        {
+          key: "doctors",
+          label: <Link to="/doctors">{i18next.t("general:Doctors")}</Link>,
+        },
+        {
+          key: "patients",
+          label: <Link to="/patients">{i18next.t("general:Patients")}</Link>,
+        },
+        {key: "caases", label: <Link to="/caases">{i18next.t("general:Caases")}</Link>},
+
+      ],
+    });
+    // res.push(Setting.getItem(<Link to="/caases">{i18next.t("general:Caases")}</Link>, "caases"));
     res.push(Setting.getItem(<Link to="/consultations">{i18next.t("general:Consultations")}</Link>, "consultations"));
-    res.push(Setting.getItem(<Link to="/doctors">{i18next.t("general:Doctors")}</Link>, "doctors"));
-    res.push(Setting.getItem(<Link to="/hospitals">{i18next.t("general:Hospitals")}</Link>, "hospitals"));
+    // res.push(Setting.getItem(<Link to="/doctors">{i18next.t("general:Doctors")}</Link>, "doctors"));
+    // res.push(Setting.getItem(<Link to="/hospitals">{i18next.t("general:Hospitals")}</Link>, "hospitals"));
     res.push(Setting.getItem(<Link to="/learnings">{i18next.t("general:Learnings")}</Link>, "learnings"));
-    res.push(Setting.getItem(<Link to="/patients">{i18next.t("general:Patients")}</Link>, "patients"));
+    // res.push(Setting.getItem(<Link to="/patients">{i18next.t("general:Patients")}</Link>, "patients"));
     res.push(Setting.getItem(<Link to="/pathscompare">{i18next.t("general:Paths Compare")}</Link>, "pathscompare"));
     res.push(Setting.getItem(<Link to="/audit">{i18next.t("general:Audit")}</Link>, "audit"));
     res.push(Setting.getItem(<Link to="/sharings">{i18next.t("general:Sharings")}</Link>, "sharings"));
