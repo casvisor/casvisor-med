@@ -117,5 +117,6 @@ func initAPI() {
 
 	beego.Router("/api/commit-consumer", &controllers.ApiController{}, "POST:CommitConsumer")
 	beego.Router("/api/query-consumer", &controllers.ApiController{}, "GET:QueryConsumer")
+	beego.Router("/api/compare-bpmn", &controllers.ApiController{}, "POST:CompareBpmn")
 
 }

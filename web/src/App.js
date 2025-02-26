@@ -14,7 +14,7 @@
 
 import React, {Component} from "react";
 import {Link, Redirect, Route, Switch, withRouter} from "react-router-dom";
-import {StyleProvider, legacyLogicalPropertiesTransformer} from "@ant-design/cssinjs";
+import {legacyLogicalPropertiesTransformer, StyleProvider} from "@ant-design/cssinjs";
 import {Avatar, Button, Card, ConfigProvider, Drawer, Dropdown, FloatButton, Layout, Menu} from "antd";
 import {BarsOutlined, DownOutlined, LogoutOutlined, SettingOutlined} from "@ant-design/icons";
 import "./App.less";
@@ -53,6 +53,7 @@ import PatientEditPage from "./PatientEditPage";
 import ConsumerListPage from "./ConsumerListPage";
 import ConsumerEditPage from "./ConsumerEditPage";
 import AuditPage from "./AuditPage";
+import PathsComparePage from "./PathsComparePage";
 
 const {Header, Footer, Content} = Layout;
 
@@ -232,6 +233,7 @@ class App extends Component {
     res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>, "sessions"));
     res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>, "records"));
     res.push(Setting.getItem(<Link to="/workbench" target="_blank">{i18next.t("general:Workbench")}</Link>, "workbench"));
+    res.push(Setting.getItem(<Link to="/pathscompare">{i18next.t("general:Paths Compare")}</Link>, "pathscompare"));
     res.push(Setting.getItem(<a target="_blank" rel="noreferrer" href={Setting.isLocalhost() ? `${Setting.ServerUrl}/swagger/` : "/swagger/"}>{i18next.t("general:Swagger")}</a>, "/swagger"));
 
     return res;
@@ -288,6 +290,8 @@ class App extends Component {
         <Route exact path="/access/:owner/:name" render={(props) => this.renderSigninIfNotSignedIn(<AccessPage account={this.state.account} {...props} />)} />
         <Route exact path="/workbench" render={(props) => this.renderSigninIfNotSignedIn(<AssetWorkbench account={this.state.account} {...props} />)} />
         <Route exact path="/audit" render={(props) => this.renderSigninIfNotSignedIn(<AuditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/pathscompare" render={(props) => this.renderSigninIfNotSignedIn(<PathsComparePage account={this.state.account} {...props} />)} />
+
       </Switch>
     );
   }
