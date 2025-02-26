@@ -39,7 +39,6 @@ class CaaseListPage extends BaseListPage {
       diagnosisDate: moment().format(),
       prescription: "",
       followUp: "",
-      variation: false,
       HISInterfaceInfo: "",
       primaryCarePhysician: "",
       patientName: "",
@@ -171,13 +170,6 @@ class CaaseListPage extends BaseListPage {
         key: "followUp",
         width: "160px",
         sorter: (a, b) => a.followUp.localeCompare(b.followUp),
-      },
-      {
-        title: i18next.t("general:Variation"),
-        dataIndex: "variation",
-        key: "variation",
-        width: "120px",
-        sorter: (a, b) => a.variation - b.variation,
       },
       {
         title: i18next.t("general:HIS Interface Info"),
