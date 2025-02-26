@@ -35,8 +35,8 @@ type Sharing struct {
 
 	DatasetId string `xorm:"varchar(100)" json:"datasetId"`
 	DataDiscription string `xorm:"varchar(100)" json:"dataDiscription"`
-	DataDigest    string `json:"Digest"`
-	DataSignature string `json:"Signature"`
+	DataDigest    string `xorm:"varchar(100)" json:"dataDigest"`
+	DataSignature string `xorm:"varchar(100)" json:"dataSignature"`
 
 	TaskId      string `xorm:"varchar(100)" json:"taskId"`
 	TaskDescription    string `xorm:"varchar(100)" json:"taskDescription"`
@@ -44,7 +44,7 @@ type Sharing struct {
 	TaskSignature string `xorm:"varchar(100)" json:"taskSignature"`
 
 	TeeProvider string `xorm:"varchar(100)" json:"teeProvider"`
-	AttestId    string `xorm:"varchar(100)" json:"AttestId"`
+	AttestId    string `xorm:"varchar(100)" json:"attestId"`
 	SignerId    string `xorm:"varchar(100)" json:"signerId"`
 
 	TotalCount string `xorm:"varchar(100)" json:"totalCount"`

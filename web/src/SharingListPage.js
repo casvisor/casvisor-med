@@ -216,11 +216,11 @@ class SharingListPage extends BaseListPage {
       },
       {
         title: i18next.t("general:Data User"),
-        dataIndex: "dataUser",
-        key: "dataUser",
+        dataIndex: "authorizedUser",
+        key: "authorizedUser",
         width: "120px",
         sorter: true,
-        ...this.getColumnSearchProps("dataUser"),
+        ...this.getColumnSearchProps("authorizedUser"),
         render: (text, sharing, index) => {
           return (
             <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/users/${sharing.userOrganization}/${sharing.dataUser}`)}>
@@ -301,22 +301,22 @@ class SharingListPage extends BaseListPage {
         sorter: true,
         ...this.getColumnSearchProps("teeProvider"),
       },
-      {
-        title: i18next.t("general:Attest ID"),
-        dataIndex: "attestId",
-        key: "attestId",
-        width: "150px",
-        sorter: true,
-        ...this.getColumnSearchProps("attestId"),
-      },
-      {
-        title: i18next.t("general:Signer ID"),
-        dataIndex: "signerId",
-        key: "signerId",
-        width: "150px",
-        sorter: true,
-        ...this.getColumnSearchProps("signerId"),
-      },
+      // {
+      //   title: i18next.t("general:Attest ID"),
+      //   dataIndex: "attestId",
+      //   key: "attestId",
+      //   width: "150px",
+      //   sorter: true,
+      //   ...this.getColumnSearchProps("attestId"),
+      // },
+      // {
+      //   title: i18next.t("general:Signer ID"),
+      //   dataIndex: "signerId",
+      //   key: "signerId",
+      //   width: "150px",
+      //   sorter: true,
+      //   ...this.getColumnSearchProps("signerId"),
+      // },
       {
         title: i18next.t("general:Total Count"),
         dataIndex: "totalCount",
@@ -393,7 +393,7 @@ class SharingListPage extends BaseListPage {
         render: (text, sharing, index) => {
           return Setting.getBlockBrowserUrl(
             this.state.providerMap,
-            sharing.provider,
+            sharing.chainProvider,
             text
           );
         },
