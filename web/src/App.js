@@ -53,6 +53,7 @@ import PatientEditPage from "./PatientEditPage";
 import SharingListPage from "./SharingListPage";
 import SharingEditPage from "./SharingEditPage";
 import AuditPage from "./AuditPage";
+import PathsComparePage from "./PathsComparePage";
 
 const {Header, Footer, Content} = Layout;
 
@@ -226,6 +227,7 @@ class App extends Component {
     res.push(Setting.getItem(<Link to="/hospitals">{i18next.t("general:Hospitals")}</Link>, "hospitals"));
     res.push(Setting.getItem(<Link to="/learnings">{i18next.t("general:Learnings")}</Link>, "learnings"));
     res.push(Setting.getItem(<Link to="/patients">{i18next.t("general:Patients")}</Link>, "patients"));
+    res.push(Setting.getItem(<Link to="/pathscompare">{i18next.t("general:Paths Compare")}</Link>, "pathscompare"));
     res.push(Setting.getItem(<Link to="/audit">{i18next.t("general:Audit")}</Link>, "audit"));
     res.push(Setting.getItem(<Link to="/sharings">{i18next.t("general:Sharings")}</Link>, "patients"));
     // res.push(Setting.getItem(<Link to="/machines">{i18next.t("general:Machines")}</Link>, "machines"));
@@ -288,6 +290,8 @@ class App extends Component {
         <Route exact path="/access/:owner/:name" render={(props) => this.renderSigninIfNotSignedIn(<AccessPage account={this.state.account} {...props} />)} />
         <Route exact path="/workbench" render={(props) => this.renderSigninIfNotSignedIn(<AssetWorkbench account={this.state.account} {...props} />)} />
         <Route exact path="/audit" render={(props) => this.renderSigninIfNotSignedIn(<AuditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/pathscompare" render={(props) => this.renderSigninIfNotSignedIn(<PathsComparePage account={this.state.account} {...props} />)} />
+
       </Switch>
     );
   }

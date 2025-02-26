@@ -117,4 +117,5 @@ func initAPI() {
 
 	beego.Router("/api/query-sharing", &controllers.ApiController{}, "GET:QuerySharing")
 
+	beego.Router("/api/compare-bpmn", &controllers.ApiController{}, "POST:CompareBpmn")
 }

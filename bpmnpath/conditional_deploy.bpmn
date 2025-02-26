@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1vtsc59" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.20.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_GLUvalue_3" name="血糖监测_前置条件判断" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="Event_04v8cyg">
+      <bpmn:outgoing>Flow_1ixu929</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1ixu929" sourceRef="Event_04v8cyg" targetRef="Activity_GLUtest" />
+    <bpmn:exclusiveGateway id="Gateway_0mgsx6u" camunda:asyncAfter="true">
+      <bpmn:incoming>Flow_0mpyl8e</bpmn:incoming>
+      <bpmn:outgoing>Flow_00zr68b</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0926vox</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1n631mj</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0mpyl8e" sourceRef="Activity_GLUtest" targetRef="Gateway_0mgsx6u" />
+    <bpmn:parallelGateway id="Gateway_0xkt0g4" camunda:asyncBefore="true">
+      <bpmn:incoming>Flow_1n631mj</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fq42ko</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0qf9yvj</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_00zr68b" sourceRef="Gateway_0mgsx6u" targetRef="Activity_medication10">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${GLU_value &lt; x}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0926vox" sourceRef="Gateway_0mgsx6u" targetRef="Activity_medication20">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${x&lt;GLU_value &amp;&amp; GLU_value&lt;y}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1n631mj" sourceRef="Gateway_0mgsx6u" targetRef="Gateway_0xkt0g4">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${GLU_value&gt;y}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1fq42ko" sourceRef="Gateway_0xkt0g4" targetRef="Activity_medication20_2" />
+    <bpmn:sequenceFlow id="Flow_0qf9yvj" sourceRef="Gateway_0xkt0g4" targetRef="Activity_additional_test" />
+    <bpmn:parallelGateway id="Gateway_1pfttbh">
+      <bpmn:incoming>Flow_1hov2yx</bpmn:incoming>
+      <bpmn:incoming>Flow_16y33sz</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jb68sn</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_1hov2yx" sourceRef="Activity_medication20_2" targetRef="Gateway_1pfttbh" />
+    <bpmn:sequenceFlow id="Flow_16y33sz" sourceRef="Activity_additional_test" targetRef="Gateway_1pfttbh" />
+    <bpmn:exclusiveGateway id="Gateway_0qde082">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_0jb68sn</bpmn:incoming>
+      <bpmn:incoming>Flow_0677e0n</bpmn:incoming>
+      <bpmn:incoming>Flow_0f9c181</bpmn:incoming>
+      <bpmn:outgoing>Flow_1juskk2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0jb68sn" sourceRef="Gateway_1pfttbh" targetRef="Gateway_0qde082" />
+    <bpmn:sequenceFlow id="Flow_0677e0n" sourceRef="Activity_medication20" targetRef="Gateway_0qde082" />
+    <bpmn:sequenceFlow id="Flow_0f9c181" sourceRef="Activity_medication10" targetRef="Gateway_0qde082" />
+    <bpmn:sequenceFlow id="Flow_1juskk2" sourceRef="Gateway_0qde082" targetRef="Activity_patient_treatment" />
+    <bpmn:endEvent id="Event_1xvfe2y">
+      <bpmn:incoming>Flow_0wg06ug</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0wg06ug" sourceRef="Activity_patient_treatment" targetRef="Event_1xvfe2y" />
+    <bpmn:task id="Activity_medication20" name="给药20ml" camunda:asyncBefore="true" camunda:asyncAfter="true">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="dosage">20</camunda:outputParameter>
+          <camunda:outputParameter name="path">2</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0926vox</bpmn:incoming>
+      <bpmn:outgoing>Flow_0677e0n</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_medication20_2" name="给药20ml" camunda:asyncBefore="true" camunda:asyncAfter="true">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="dosage">20</camunda:outputParameter>
+          <camunda:outputParameter name="path">3</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1fq42ko</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hov2yx</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_additional_test" name="额外诊断" camunda:asyncBefore="true" camunda:asyncAfter="true">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="path">3</camunda:outputParameter>
+          <camunda:outputParameter name="extradiagnosis">yes</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0qf9yvj</bpmn:incoming>
+      <bpmn:outgoing>Flow_16y33sz</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_medication10" name="给药10ml" camunda:asyncBefore="true" camunda:asyncAfter="true">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="dosage">10</camunda:outputParameter>
+          <camunda:outputParameter name="path">1</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_00zr68b</bpmn:incoming>
+      <bpmn:outgoing>Flow_0f9c181</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:serviceTask id="Activity_patient_treatment" name="患者治疗" camunda:type="external" camunda:topic="patientTreatment">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="path">${path}</camunda:inputParameter>
+          <camunda:inputParameter name="dosage">${dosage}</camunda:inputParameter>
+          <camunda:inputParameter name="extradiagnosis">${extradiagnosis}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1juskk2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wg06ug</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:task id="Activity_GLUtest" name="血糖检测" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="PatientID">${PatientID}</camunda:inputParameter>
+          <camunda:inputParameter name="x">${x}</camunda:inputParameter>
+          <camunda:inputParameter name="y">${y}</camunda:inputParameter>
+          <camunda:inputParameter name="GLU_value">${GLU_value}</camunda:inputParameter>
+          <camunda:outputParameter name="GLU_value">${GLU_value}</camunda:outputParameter>
+          <camunda:outputParameter name="x">${x}</camunda:outputParameter>
+          <camunda:outputParameter name="y">${y}</camunda:outputParameter>
+          <camunda:outputParameter name="path">${path}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ixu929</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mpyl8e</bpmn:outgoing>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_GLUvalue_3">
+      <bpmndi:BPMNShape id="Event_04v8cyg_di" bpmnElement="Event_04v8cyg">
+        <dc:Bounds x="152" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0mgsx6u_di" bpmnElement="Gateway_0mgsx6u" isMarkerVisible="true">
+        <dc:Bounds x="365" y="225" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0xkt0g4_di" bpmnElement="Gateway_0xkt0g4">
+        <dc:Bounds x="485" y="355" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0r7rt21" bpmnElement="Gateway_1pfttbh">
+        <dc:Bounds x="765" y="355" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1kpyz9o" bpmnElement="Gateway_0qde082" isMarkerVisible="true">
+        <dc:Bounds x="815" y="225" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xvfe2y_di" bpmnElement="Event_1xvfe2y">
+        <dc:Bounds x="1042" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_010tnwq_di" bpmnElement="Activity_medication20">
+        <dc:Bounds x="490" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1b7ubnj_di" bpmnElement="Activity_medication20_2">
+        <dc:Bounds x="630" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dpdq95_di" bpmnElement="Activity_additional_test">
+        <dc:Bounds x="620" y="400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1swaw4t_di" bpmnElement="Activity_medication10">
+        <dc:Bounds x="490" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1s9a3r6_di" bpmnElement="Activity_patient_treatment">
+        <dc:Bounds x="910" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02lp0ke_di" bpmnElement="Activity_GLUtest">
+        <dc:Bounds x="220" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ixu929_di" bpmnElement="Flow_1ixu929">
+        <di:waypoint x="188" y="250" />
+        <di:waypoint x="220" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mpyl8e_di" bpmnElement="Flow_0mpyl8e">
+        <di:waypoint x="320" y="250" />
+        <di:waypoint x="365" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00zr68b_di" bpmnElement="Flow_00zr68b">
+        <di:waypoint x="390" y="225" />
+        <di:waypoint x="390" y="150" />
+        <di:waypoint x="490" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0926vox_di" bpmnElement="Flow_0926vox">
+        <di:waypoint x="415" y="250" />
+        <di:waypoint x="490" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1n631mj_di" bpmnElement="Flow_1n631mj">
+        <di:waypoint x="390" y="275" />
+        <di:waypoint x="390" y="380" />
+        <di:waypoint x="485" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fq42ko_di" bpmnElement="Flow_1fq42ko">
+        <di:waypoint x="535" y="380" />
+        <di:waypoint x="588" y="380" />
+        <di:waypoint x="588" y="310" />
+        <di:waypoint x="630" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qf9yvj_di" bpmnElement="Flow_0qf9yvj">
+        <di:waypoint x="535" y="380" />
+        <di:waypoint x="583" y="380" />
+        <di:waypoint x="583" y="440" />
+        <di:waypoint x="620" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hov2yx_di" bpmnElement="Flow_1hov2yx">
+        <di:waypoint x="730" y="310" />
+        <di:waypoint x="790" y="310" />
+        <di:waypoint x="790" y="355" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16y33sz_di" bpmnElement="Flow_16y33sz">
+        <di:waypoint x="720" y="440" />
+        <di:waypoint x="790" y="440" />
+        <di:waypoint x="790" y="405" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jb68sn_di" bpmnElement="Flow_0jb68sn">
+        <di:waypoint x="815" y="380" />
+        <di:waypoint x="840" y="380" />
+        <di:waypoint x="840" y="275" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0677e0n_di" bpmnElement="Flow_0677e0n">
+        <di:waypoint x="590" y="250" />
+        <di:waypoint x="815" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f9c181_di" bpmnElement="Flow_0f9c181">
+        <di:waypoint x="590" y="150" />
+        <di:waypoint x="840" y="150" />
+        <di:waypoint x="840" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1juskk2_di" bpmnElement="Flow_1juskk2">
+        <di:waypoint x="865" y="250" />
+        <di:waypoint x="910" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wg06ug_di" bpmnElement="Flow_0wg06ug">
+        <di:waypoint x="1010" y="250" />
+        <di:waypoint x="1042" y="250" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
