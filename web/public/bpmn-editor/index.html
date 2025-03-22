@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+  <meta charset="UTF-8">
+  <!-- 加载 bpmn-js 资源 -->
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js/dist/assets/diagram-js.css">
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js/dist/assets/bpmn-font/css/bpmn.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/antd@4.24.13/dist/antd.min.css">
+</head>
+<body style="height: 100%;">
+  <div id="bpmn-container" style="height: 100%;"></div>
+  <button class="ant-btn ant-btn-default" id="save-button" style="position: fixed; left: 20px; bottom: 20px; z-index: 1001;">
+    Save
+  </button>
+
+  <script src="https://unpkg.com/bpmn-js/dist/bpmn-modeler.development.js"></script>
+  <script>
+    // 初始化编辑器
+    const container = document.getElementById('bpmn-container');
+    const modeler = new BpmnJS({
+      container: container,
+      keyboard: { bindTo: document }
+    });
+
+    // 创建新流程图
+    modeler.createDiagram()
+      .catch(err => console.error('Failed to create diagram', err));
+
+    // 保存按钮逻辑
+    document.getElementById('save-button').addEventListener('click', async () => {
+      try {
+        const { xml } = await modeler.saveXML({ format: true });
+        const blob = new Blob([xml], { type: 'application/xml' });
+        // showSaveFilePicker API
+        const fileHandle = await window.showSaveFilePicker({
+            suggestedName: 'diagram.bpmn',
+            types: [{
+                description: 'BPMN Files',
+                accept: { 'application/xml': ['.bpmn'] },
+            }],
+        });
+
+        const writable = await fileHandle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+      } catch (err) {
+        console.error('Failed to save BPMN', err);
+      }
+    });
+  </script>
+</body>
+</html>
