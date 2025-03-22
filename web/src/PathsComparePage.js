@@ -4,6 +4,7 @@ import * as Setting from "./Setting";
 import i18next from "i18next";
 import moment from "moment";
 import * as PathsCompareBackend from "./backend/PathsCompareBackend";
+import "./BpmnEditor.css";
 
 class PathsComparePage extends React.Component {
   constructor(props) {
@@ -18,6 +19,11 @@ class PathsComparePage extends React.Component {
         createdTime: moment().format(),  // 默认值
         updatedTime: moment().format(),  // 默认值
         displayName: `New Patient - ${Setting.getRandomName()}`,  // 默认值
+      },
+      // BPMN 编辑器相关状态
+      editor: {
+        show: false,      // 控制编辑器显示
+        xmlContent: "",   // 存储BPMN XML内容
       },
     };
   }
@@ -92,8 +98,44 @@ class PathsComparePage extends React.Component {
     }));
   };
 
+  // 显示编辑器
+  handleShowEditor = () => {
+    this.setState({
+      editor: {
+        ...this.state.editor,
+        show: true,
+      },
+    });
+  };
+
+  // 隐藏编辑器
+  handleHideEditor = () => {
+    this.setState({
+      editor: {
+        ...this.state.editor,
+        show: false,
+      },
+    });
+  };
+
+  // 保存BPMN内容
+  handleSaveBPMN = (xmlContent) => {
+    const {editor} = this.state;
+    // 根据当前编辑模式更新对应文件
+    const field = "BpmnFile";
+    this.setState({
+      [field]: xmlContent,
+      editor: {
+        ...editor,
+        xmlContent,
+        show: false,
+      },
+    });
+  };
+
   render() {
     const {patient} = this.state;
+    const {editor} = this.state;
 
     return (
       <div>
@@ -119,7 +161,7 @@ class PathsComparePage extends React.Component {
             <Col style={{marginTop: "5px"}} span={4}>
               {Setting.getLabel(i18next.t("general:Unknown BPMN File"), i18next.t("general:Unknown BPMN File - Tooltip"))}:
             </Col>
-            <Col span={20}>
+            <Col span={5}>
               <Upload
                 customRequest={(options) => options.onSuccess(null, options.file)}
                 showUploadList={false}
@@ -129,8 +171,32 @@ class PathsComparePage extends React.Component {
                 <Button>{i18next.t("general:Upload Unknown BPMN File")}</Button>
               </Upload>
             </Col>
+            <Col span={5}>
+              {/* BPMN 编辑按钮 */}
+              <Button
+                onClick={() => this.handleShowEditor("standard")}>
+                {i18next.t("general:Create BPMN File")}
+              </Button>
+            </Col>
           </Row>
         </Card>
+
+        {/* BPMN 编辑器模态框 */}
+        {editor.show && (
+          <Card size="small" title={i18next.t("pathsCompare:BPMN Editor")} style={{marginTop: "20px"}} type="inner">
+            <Row>
+              <Button size="small" onClick={this.handleHideEditor} style={{marginLeft: "97%"}}>
+                x
+              </Button>
+            </Row>
+            <Row style={{marginTop: "10px", height: "500px"}}>
+              <iframe
+                src="/bpmn-editor/index.html"
+                className="bpmn-iframe"
+              />
+            </Row>
+          </Card>
+        )}
 
         {/* 需要填写的 Patient 信息部分 */}
         <Card size="small" title="Patient Information" style={{marginTop: "20px"}} type="inner">
